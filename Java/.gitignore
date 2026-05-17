@@ -1,0 +1,4 @@
+*.class
+.metada/
+bin/
+tmp/
