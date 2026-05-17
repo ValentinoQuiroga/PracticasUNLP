@@ -1,0 +1,120 @@
+package tp3;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
+public class ParcialArboles {
+	
+	public static boolean esDeSeleccion (GeneralTree<Integer> arbol) {
+		if (arbol == null) {
+			return false;
+		}
+		
+		if (!arbol.isLeaf()) {
+			boolean auxiliar = false;
+			for(GeneralTree<Integer> hijo: arbol.getChildren()) {
+				if (hijo.getData() == arbol.getData()) {
+					auxiliar = true;
+				}
+				if (!esDeSeleccion(hijo)) {
+					return false;
+				}
+			}
+			return auxiliar;
+		}
+		return true;
+	}
+	
+	public static List<Integer> resolver(GeneralTree<Integer> arbol){
+		List<Integer> lista = new LinkedList<Integer>();
+		List<Integer> listaAux = new LinkedList<Integer>();
+		navegar(arbol, lista, listaAux, 0);
+		return lista;
+		
+	}
+	
+	private static boolean navegar(GeneralTree<Integer> a, List<Integer> lista, List<Integer> aux, int nivelActual) {
+		if (a == null) {
+			return false;
+		}
+		boolean agregado = false;
+		if (a.getData() != 0) {
+			aux.add(a.getData() * nivelActual);
+			agregado = true;
+		}
+		if (!a.isLeaf()) {
+			for (GeneralTree<Integer> hijo: a.getChildren()) {
+				boolean flag = navegar(hijo, lista, aux, nivelActual + 1);
+				if (sumarLista(aux) > sumarLista(lista)) {
+					lista.clear();
+					lista.addAll(aux);
+				}
+				if (flag) {
+					aux.removeLast();
+				}
+			}
+		}
+		return agregado;
+	}
+	private static int sumarLista(List<Integer> lista) {
+		int total = 0;
+		for (Integer i: lista) {
+			total += i;
+			System.out.println("Soy " + i + " total " + total);
+		}
+		return total;
+	}
+	
+	public static boolean resolverA(GeneralTree<Integer> arbol) {
+		Queue<GeneralTree<Integer>> cola = new LinkedList<GeneralTree<Integer>>();
+		if (arbol == null) {
+			return false;
+		}
+		int nivelActual = 0;
+		cola.add(arbol);
+		while (!cola.isEmpty()) {
+			int cantidadActual = cola.size();
+			if (cantidadActual != nivelActual + 1) {
+				return false;
+			}
+			for (int i = 0; i < cantidadActual; i++) {
+				GeneralTree<Integer> actual = cola.poll();
+				for (GeneralTree<Integer> hijo: actual.getChildren()) {
+					cola.add(hijo);
+				}
+			}
+			nivelActual++;
+		}
+		return true;
+	}
+	
+	public static List<Integer> caminoSignoAlternante(GeneralTree<Integer> arbol){
+		List<Integer> caminoResultado = new LinkedList<Integer>();
+		List<Integer> caminoAuxiliar = new LinkedList<Integer>();
+		if ((arbol != null) && (!arbol.isEmpty())) {
+			recorrerCamino(arbol, caminoResultado, caminoAuxiliar);
+		}
+		return caminoResultado;
+	}
+	private static boolean recorrerCamino(GeneralTree<Integer> arbol, List<Integer> caminoRes, List<Integer> caminoAux) {
+		caminoAux.add(arbol.getData());
+		if (!arbol.isLeaf()) {
+			for (GeneralTree<Integer> hijo: arbol.getChildren()) {
+				int datoHijo = hijo.getData();
+				int datoPadre = arbol.getData();
+				if (((datoHijo < 0)&&(datoPadre >= 0)) | ((datoHijo >= 0) && (datoPadre < 0))) {
+					boolean flag = recorrerCamino(hijo, caminoRes, caminoAux);
+					if (sumarLista(caminoAux) > sumarLista(caminoRes)) {
+						System.out.println("actualizando por " + datoHijo);
+						caminoRes.clear();
+						caminoRes.addAll(caminoAux);
+					}
+					System.out.println("me van a eliminar " + datoHijo);
+					caminoAux.removeLast();
+				}
+			}
+		}
+		return true;
+	}
+	
+	
+}

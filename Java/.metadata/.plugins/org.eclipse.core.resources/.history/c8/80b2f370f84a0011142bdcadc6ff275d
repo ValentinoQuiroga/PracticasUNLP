@@ -1,0 +1,179 @@
+package tp3;
+
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.List;
+import java.util.Queue;
+
+public class GeneralTree<T>{
+
+	private T data;
+	private List<GeneralTree<T>> children = new LinkedList<GeneralTree<T>>(); 
+
+	public GeneralTree() {
+		
+	}
+	public GeneralTree(T data) {
+		this.data = data;
+	}
+
+	public GeneralTree(T data, List<GeneralTree<T>> children) {
+		this(data);
+		this.children = children;
+	}	
+	public T getData() {
+		return data;
+	}
+
+	public void setData(T data) {
+		this.data = data;
+	}
+
+	public List<GeneralTree<T>> getChildren() {
+		return this.children;
+	}
+	
+	public void setChildren(List<GeneralTree<T>> children) {
+		if (children != null)
+			this.children = children;
+	}
+	
+	public void addChild(GeneralTree<T> child) {
+		this.getChildren().add(child);
+	}
+
+	public boolean isLeaf() {
+		return !this.hasChildren();
+	}
+	
+	public boolean hasChildren() {
+		return !this.children.isEmpty();
+	}
+	
+	public boolean isEmpty() {
+		return this.data == null && !this.hasChildren();
+	}
+
+	public void removeChild(GeneralTree<T> child) {
+		if (this.hasChildren())
+			children.remove(child);
+	}
+	
+	public int altura() {
+		return contarAltura(this, 0);
+	}
+	
+	private int contarAltura(GeneralTree<T> a, int conteo) {
+		if (a == null) {
+			return conteo;
+		}
+	
+		if (a.isLeaf()) {
+			return conteo;
+		}
+
+		int maxActual = conteo;
+		
+		for (GeneralTree<T> hijo: a.getChildren()) {
+			int conteoHijo = contarAltura(hijo,conteo) + 1;
+			if (conteoHijo > maxActual) {
+				maxActual = conteoHijo;
+			}
+		}
+		return maxActual;
+	}
+	
+	public int nivel(T dato){
+		int conteo = 0;
+		return buscarMasAltura(this, dato, conteo);
+	  }
+	
+	private int buscarMasAltura(GeneralTree<T> a, T dato, int conteo) {
+		if ((a == null) | (a.isEmpty())) {
+			return -1; //No se encontro asi que -1
+		}
+		if (a.getData() == dato) {
+			return conteo; //Se encontro asi que devuelvo conteo
+		}
+		if (a.isLeaf()) {
+			return -1; //Si llegue aca y es una hoja no hace falta buscar en hijos que no existes, devuelvo -1
+		}
+		for (GeneralTree<T> hijo: a.getChildren()) {
+			int resultado = buscarMasAltura(hijo, dato, conteo + 1); //les mando a los hijos el conteo actual + 1
+			if (resultado != -1) { //si devuelven algo que no sea -1 significa que encontraron el valor, salgo con el valor
+				return resultado;
+			}
+		}
+		
+		return -1; //si llegan aca es que no se encontro
+	}
+
+	public int ancho(){
+		return contarAncho(this);
+	}
+	
+	private int contarAncho(GeneralTree<T> a) {
+		Queue<GeneralTree<T>> cola = new LinkedList<GeneralTree<T>>();
+		if (a == null) {
+			return -1;
+		}
+		int nivelActual = 0;
+		int cantidadNivelActual = 0;
+		int maxNivel = -1;
+		int maxCantidad = -1;
+		
+		cola.add(a);
+		
+		while (!cola.isEmpty()) {
+			cantidadNivelActual = cola.size();
+			if (cantidadNivelActual > maxCantidad) {
+				maxNivel = nivelActual;
+				maxCantidad = cantidadNivelActual;
+			}
+			
+			for (int i = 0; i < cantidadNivelActual; i++) {
+				GeneralTree<T> actual = cola.poll();
+				for (GeneralTree<T> hijo: actual.getChildren()) {
+					cola.add(hijo);
+				}
+			}
+			
+			nivelActual++;
+		}
+		return maxNivel;
+	}
+	
+	public boolean esAncestro(T a, T b) {
+		return busquedaAncestral(this, a, b);
+	}
+	
+	private boolean busquedaAncestral(GeneralTree<T> arbol, T a, T b) {
+		if (a == null) {
+			return false;
+		}
+		if (arbol.getData() == a) {
+			return busquedaAncestral
+		}
+		
+		
+		
+		
+		
+	}
+	
+	private boolean buscarNodoPorDato(GeneralTree<T> arbol, T a) {
+		if (arbol == null) {
+			return false;
+		}
+		if (arbol.getData() == a) {
+			return true;
+		}
+		for (GeneralTree<T> hijo: arbol.getChildren()) {
+			boolean encontrado = buscarNodoPorDato(hijo, a);
+			if (encontrado) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,85 @@
+package tp3;
+import java.util.*;
+public class Test {
+
+	public static void main(String[] args) {
+		GeneralTree M = new GeneralTree(14);
+		GeneralTree J = new GeneralTree(13);
+		GeneralTree K = new GeneralTree(25);
+		GeneralTree L = new GeneralTree(10);
+		GeneralTree A = new GeneralTree(4);
+		GeneralTree B = new GeneralTree(7);
+		GeneralTree C = new GeneralTree(5);
+		GeneralTree D = new GeneralTree(6);
+		GeneralTree E = new GeneralTree(10);
+		GeneralTree F = new GeneralTree(18);
+		GeneralTree G = new GeneralTree(9);
+		GeneralTree H = new GeneralTree(12);
+		GeneralTree I = new GeneralTree(19);
+		GeneralTree N = new GeneralTree(200);
+		GeneralTree O = new GeneralTree(201);
+		
+		M.addChild(J);
+		M.addChild(K);
+		//M.addChild(L);
+		
+		J.addChild(A);
+		J.addChild(B);
+		J.addChild(C);
+
+		K.addChild(D);
+		K.addChild(E);
+		K.addChild(F);
+		
+		L.addChild(G);
+		L.addChild(H);
+		L.addChild(I);
+
+		
+		RedAguaPotable rap = new RedAguaPotable(M);
+		Caminos cam = new Caminos(M);
+		for (List<Integer> nodo: cam.caminoAHojaMasLejana()) {
+			
+		}
+		System.out.println("Caudal minimo > " + rap.minimoCaudal(1000));
+		
+		System.out.println("5 es ancestro de 6? > " + M.esAncestro(5, 6));
+		
+		/*
+		RecorridosAG rag = new RecorridosAG();
+		List<Integer> listaPre = rag.numerosImparesMayoresQuePreOrden(M, 0);
+		List<Integer> listaIn = rag.numerosImparesMayoresQueInOrden(M, 0);
+		List<Integer> listaPost = rag.numerosImparesMayoresQuePostOrden(M, 0);
+		List<Integer> listaNiv = rag.numerosImparesMayoresQuePorNiveles(M, 0);
+		
+		rag.imprimirPreOrden(M);
+		System.out.println("-------------------");
+		
+		for (Integer test: listaPre ) {
+			System.out.println(test);
+		}
+		System.out.println("-------------------");
+		for (Integer test: listaIn ) {
+			System.out.println(test);
+		}
+		System.out.println("-------------------");
+		for (Integer test: listaPost ) {
+			System.out.println(test);
+		}
+		System.out.println("-------------------");
+		for (Integer test: listaNiv ) {
+			System.out.println(test);
+		}
+		System.out.println("-------------------");
+		System.out.println("altura " + M.altura());
+		System.out.println("-------------------");
+		System.out.println("1:  distancia desde raiz " + M.nivel(1));
+		System.out.println("2:  distancia desde raiz " + M.nivel(2));
+		System.out.println("7:  distancia desde raiz " + M.nivel(7));
+		System.out.println("11: distancia desde raiz " + M.nivel(11));
+		System.out.println("-------------------");
+		System.out.println("Nivel mas grande " + M.ancho());
+		*/
+		
+	}
+}

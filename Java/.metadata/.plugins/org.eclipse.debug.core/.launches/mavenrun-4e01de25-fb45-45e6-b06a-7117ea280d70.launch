@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.m2e.Maven2LaunchConfigurationType">
+    <booleanAttribute key="M2_BATCH" value="true"/>
+    <stringAttribute key="M2_GOALS" value="-U archetype:generate"/>
+    <listAttribute key="M2_PROPERTIES">
+        <listEntry value="archetypeGroupId=io.github.unlp-oo"/>
+        <listEntry value="archetypeArtifactId=archetype"/>
+        <listEntry value="archetypeVersion=1.0.0"/>
+        <listEntry value="groupId=PracticaFinales"/>
+        <listEntry value="artifactId=Ejercicio21"/>
+        <listEntry value="version=0.0.1-SNAPSHOT"/>
+        <listEntry value="package=PracticaFinales.Ejercicio21"/>
+        <listEntry value="outputDirectory=/home/valentino/eclipse-workspace"/>
+    </listAttribute>
+    <booleanAttribute key="M2_SAVE_BEFORE_LAUNCH" value="false"/>
+    <booleanAttribute key="org.eclipse.debug.ui.private" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="/tmp/m2e-archetypeGenerator3208738768672687733"/>
+</launchConfiguration>

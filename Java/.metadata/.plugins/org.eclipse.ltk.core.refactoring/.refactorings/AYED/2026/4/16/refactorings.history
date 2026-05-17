@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;AYED.ejercicio1&apos; to &apos;tp1e1&apos;&#x0A;- Original project: &apos;AYED&apos;&#x0A;- Original element: &apos;AYED/src/main/java/AYED.ejercicio1&apos;&#x0A;- Renamed element: &apos;AYED/src/main/java/tp1e1&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;AYED.ejercicio1&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;AYED.ejercicio1" name="tp1e1" qualified="false" references="true" stamp="1776111782884" textual="false" version="1.0"/>
+</session>

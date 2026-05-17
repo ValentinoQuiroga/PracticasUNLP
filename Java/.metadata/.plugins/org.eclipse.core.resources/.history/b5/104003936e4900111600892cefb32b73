@@ -1,0 +1,98 @@
+package tp3;
+import java.util.*;
+public class RecorridosAG {
+
+	public List numerosImparesMayoresQuePreOrden (GeneralTree a, int n){
+		List resultado = new LinkedList();
+		buscarImparesMayoresQuePreOrden(a, n, resultado);
+		return resultado;
+	}
+	
+	private void buscarImparesMayoresQuePreOrden(GeneralTree<Integer> a, int n, List r) {
+		if (a == null) {
+		return;
+		}
+	
+		if ((a.getData() > n) && (a.getData() % 2 != 0)) {
+			r.add(a.getData());
+		}
+		
+		for (GeneralTree hijo: a.getChildren()){
+			buscarImparesMayoresQuePreOrden(hijo, n, r);
+		}
+	}
+	
+	public List numerosImparesMayoresQueInOrden (GeneralTree a, int n){
+		List resultado = new LinkedList();
+		buscarImparesMayoresQueInOrden(a, n, resultado);
+		return resultado;
+	}
+	
+	private void buscarImparesMayoresQueInOrden(GeneralTree<Integer> a, int n, List r) {
+		if (a == null) {
+			return;
+		}
+		if (!a.isLeaf()) {
+			GeneralTree primerHijo = a.getChildren().get(0);
+			buscarImparesMayoresQueInOrden(primerHijo, n, r);
+		}
+	
+		if ((a.getData() > n) && (a.getData() % 2 != 0)) {
+			r.add(a.getData());
+		}
+	
+		List<GeneralTree<Integer>> hijosRestantes = a.getChildren();
+		for (int i = 1; i < a.getChildren().size(); i++){
+			buscarImparesMayoresQueInOrden(hijosRestantes.get(i), n, r);
+		}
+	}
+	
+	public List numerosImparesMayoresQuePostOrden (GeneralTree a, int n){
+		List resultado = new LinkedList();
+		buscarImparesMayoresQuePostOrden(a, n, resultado);
+		return resultado;
+	}
+	
+	private void buscarImparesMayoresQuePostOrden(GeneralTree<Integer> a, int n, List r) {
+		if (a == null) {
+			return;
+		}
+		if (!a.isLeaf()) {
+			for (GeneralTree hijo: a.getChildren()){
+					buscarImparesMayoresQuePostOrden(hijo, n, r);
+			}
+		}
+		if ((a.getData() > n) && (a.getData() % 2 != 0)) {
+			r.add(a.getData());
+			return;
+		}
+	}
+	
+	public List numerosImparesMayoresQuePorNiveles (GeneralTree a, int n){
+		List resultado = new LinkedList();
+		Stack<GeneralTree> cola = new Stack();
+		buscarImparesMayoresQuePorNiveles(a, n, resultado, cola);
+		return resultado;
+	}
+	
+	private void buscarImparesMayoresQuePorNiveles(GeneralTree a, int n, List r, Stack<GeneralTree<Integer>> cola) {
+		if (a == null) {
+			return;
+		}
+		cola.add(a);
+		
+		if (!a.isLeaf()) {
+			GeneralTree actual = cola.pop();
+			r.add(actual.getData());
+		
+			for (GeneralTree hijo: actual.getChildren()){
+					cola.add(hijo);
+						buscarImparesMayoresQuePorNiveles(hijo, n, r, cola);
+			}
+		}
+		if ((a.getData() > n) && (a.getData() % 2 != 0)) {
+			r.add(a.getData());
+			return;
+		}
+	}
+}

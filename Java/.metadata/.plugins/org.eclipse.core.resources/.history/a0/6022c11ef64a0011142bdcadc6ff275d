@@ -1,0 +1,32 @@
+package tp3;
+
+public class TestEmpresa {
+	GeneralTree b = new GeneralTree(2);
+	GeneralTree c = new GeneralTree(3);
+	GeneralTree d = new GeneralTree(4);
+	GeneralTree e = new GeneralTree(5);
+	GeneralTree f = new GeneralTree(6);
+	GeneralTree g = new GeneralTree(7);
+	GeneralTree h = new GeneralTree(8);
+	GeneralTree i = new GeneralTree(9);
+	GeneralTree j = new GeneralTree(10);
+	GeneralTree k = new GeneralTree(11);
+	GeneralTree l = new GeneralTree(12);
+	
+	a.addChild(d);
+	a.addChild(c);
+	a.addChild(b);
+	
+	d.addChild(l);
+	d.addChild(i);	d.addChild(h);
+	
+	c.addChild(g);
+	
+	g.addChild(k);
+	g.addChild(j);
+	
+	b.addChild(f);
+	b.addChild(e);
+	
+	
+}

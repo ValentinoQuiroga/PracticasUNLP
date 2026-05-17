@@ -1,0 +1,62 @@
+package tp3;
+import java.util.*;
+public class Test {
+
+	public static void main(String[] args) {
+		GeneralTree a = new GeneralTree();
+		GeneralTree b = new GeneralTree(2);
+		GeneralTree c = new GeneralTree(3);
+		GeneralTree d = new GeneralTree(4);
+		GeneralTree e = new GeneralTree(5);
+		GeneralTree f = new GeneralTree(6);
+		GeneralTree g = new GeneralTree(7);
+		GeneralTree h = new GeneralTree(8);
+		GeneralTree i = new GeneralTree(9);
+		GeneralTree j = new GeneralTree(10);
+		GeneralTree k = new GeneralTree(11);
+		GeneralTree l = new GeneralTree(12);
+		
+		a.addChild(d);
+		a.addChild(c);
+		a.addChild(b);
+		
+		d.addChild(l);
+		d.addChild(i);
+		d.addChild(h);
+		
+		//c.addChild(g);
+		
+		g.addChild(k);
+		g.addChild(j);
+		
+		b.addChild(f);
+		b.addChild(e);
+		
+		RecorridosAG rag = new RecorridosAG();
+		List<Integer> listaPre = rag.numerosImparesMayoresQuePreOrden(a, 0);
+		List<Integer> listaIn = rag.numerosImparesMayoresQueInOrden(a, 0);
+		List<Integer> listaPost = rag.numerosImparesMayoresQuePostOrden(a, 0);
+		List<Integer> listaNiv = rag.numerosImparesMayoresQuePorNiveles(a, 0);
+		
+		rag.imprimirPreOrden(a);
+		System.out.println("-------------------");
+		
+		for (Integer test: listaPre ) {
+			System.out.println(test);
+		}
+		System.out.println("-------------------");
+		for (Integer test: listaIn ) {
+			System.out.println(test);
+		}
+		System.out.println("-------------------");
+		for (Integer test: listaPost ) {
+			System.out.println(test);
+		}
+		System.out.println("-------------------");
+		for (Integer test: listaNiv ) {
+			System.out.println(test);
+		}
+		System.out.println(a.altura());
+		
+	}
+}

@@ -1,0 +1,8 @@
+package tp3;
+import java.util.Queue;
+public class AnalizarArbol {
+	
+	public double devolverMaximoPromedio(GeneralTree<AreaEmpresa> arbol) {
+		Queue<GeneralTree<AreaEmpresa>> cola = new LinkedList<GeneralTree<AreaEmpresa>>(;)
+	}
+}

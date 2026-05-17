@@ -1,0 +1,9 @@
+package tp1e8;
+import java.util.*;u
+
+public class Queue{
+	private LinkedList<T> cola = new List<T>();
+	public Queue() {
+		
+	}
+}

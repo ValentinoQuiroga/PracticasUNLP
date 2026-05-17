@@ -1,0 +1,31 @@
+package tp3;
+import java.util.List;
+import java.util.LinkedList;
+public class Caminos {
+	private GeneralTree<Integer> arbol;
+	public Caminos(GeneralTree<Integer> arbol) {
+		this.arbol = arbol;
+	}
+	public List<Integer> caminoAHojaMasLejana(){
+		List<Integer> caminoBase = new LinkedList<Integer>();
+		List<Integer> mejorCamino = new LinkedList<Integer>();
+		buscarCamino(arbol, 0, -1, caminoBase, mejorCamino);
+		return mejorCamino;
+	}
+	private void buscarCamino(GeneralTree<Integer> a, int nivelActual, int profMax, List<Integer> caminoActual, List<Integer> mejorCamino) {
+		if (a == null) {
+			return;
+		}
+		caminoActual.add(a.getData());
+		
+		if (!a.isLeaf()) {
+			for (GeneralTree<Integer> hijo: a.getChildren()) {
+				buscarCamino(hijo, nivelActual + 1, profMax, caminoActual, mejorCamino);
+				if (caminoActual.size() > mejorCamino.size()) {
+					mejorCamino.clear();
+					mejorCamino.addAll(caminoActual);
+				}
+			}
+		}
+	}
+}

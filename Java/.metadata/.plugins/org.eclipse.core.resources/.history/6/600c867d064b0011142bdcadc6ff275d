@@ -1,0 +1,51 @@
+package tp3;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class RedAguaPotable {
+	private GeneralTree<Character> estructura;
+	
+	public RedAguaPotable(GeneralTree<Character> estructura){
+		this.estructura = estructura;
+	}
+	
+	public double minimoCaudal(double caudal) {
+		return contarCaudal(estructura, caudal);
+	}
+	
+	private double contarCaudal(GeneralTree<Character> a, double caudal) {
+		Queue<GeneralTree<Character>> cola = new LinkedList<GeneralTree<Character>>();
+		if (a == null) {
+			return -1;
+		}
+		int cantidadNivelActual = 0;
+		double caudalMin = 9999;
+		
+		cola.add(a);
+		
+		while (!cola.isEmpty()) {
+			cantidadNivelActual = cola.size();
+			double caudalActual = caudal / cantidadNivelActual;
+			if (caudalActual < caudalMin) {
+				caudalMin = caudalActual;
+			}
+			
+			for (int i = 0; i < cantidadNivelActual; i++) {
+				GeneralTree<Character> actual = cola.poll();
+				for (GeneralTree<Character> hijo: actual.getChildren()) {
+					cola.add(hijo);
+				}
+			}
+		}
+		//return caudalMin;
+		
+		if (a == null) {
+			return -1;
+		}
+		if ((a.isLeaf()) && (caudalActual < caudalMin )){
+			return caudalActual;
+		}
+	}
+		
+}

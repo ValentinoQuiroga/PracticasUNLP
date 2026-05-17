@@ -1,0 +1,89 @@
+package tp3;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
+public class ParcialArboles {
+	
+	public static boolean esDeSeleccion (GeneralTree<Integer> arbol) {
+		if (arbol == null) {
+			return false;
+		}
+		
+		if (!arbol.isLeaf()) {
+			boolean auxiliar = false;
+			for(GeneralTree<Integer> hijo: arbol.getChildren()) {
+				if (hijo.getData() == arbol.getData()) {
+					auxiliar = true;
+				}
+				if (!esDeSeleccion(hijo)) {
+					return false;
+				}
+			}
+			return auxiliar;
+		}
+		return true;
+	}
+	
+	public static List<Integer> resolver(GeneralTree<Integer> arbol){
+		List<Integer> lista = new LinkedList<Integer>();
+		List<Integer> listaAux = new LinkedList<Integer>();
+		navegar(arbol, lista, listaAux, 0);
+		return lista;
+		
+	}
+	
+	private static boolean navegar(GeneralTree<Integer> a, List<Integer> lista, List<Integer> aux, int nivelActual) {
+		if (a == null) {
+			return false;
+		}
+		boolean agregado = false;
+		if (a.getData() != 0) {
+			aux.add(a.getData() * nivelActual);
+			agregado = true;
+		}
+		if (!a.isLeaf()) {
+			for (GeneralTree<Integer> hijo: a.getChildren()) {
+				boolean flag = navegar(hijo, lista, aux, nivelActual + 1);
+				if (sumarLista(aux) > sumarLista(lista)) {
+					lista.clear();
+					lista.addAll(aux);
+				}
+				if (flag) {
+					aux.removeLast();
+				}
+			}
+		}
+		return agregado;
+	}
+	private static int sumarLista(List<Integer> lista) {
+		int total = 0;
+		for (Integer i: lista) {
+			total += i;
+		}
+		return total;
+	}
+	
+	public static boolean resolverA(GeneralTree<Integer> arbol) {
+		Queue<GeneralTree<Integer>> cola = new LinkedList<GeneralTree<Integer>>();
+		if (arbol == null) {
+			return false;
+		}
+		int nivelActual = 0;
+		cola.add(arbol);
+		while (!cola.isEmpty()) {
+			int cantidadActual = cola.size();
+			if (cantidadActual != nivelActual + 1) {
+				return false;
+			}
+			for (int i = 0; i < cantidadActual; i++) {
+				GeneralTree<Integer> actual = cola.poll();
+				for (GeneralTree<Integer> hijo: actual.getChildren()) {
+					cola.add(hijo);
+				}
+			}
+			nivelActual++;
+		}
+		return true;
+	}
+	
+}

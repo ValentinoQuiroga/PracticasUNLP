@@ -1,0 +1,12 @@
+package tp1e8;
+import java.util.*;
+
+public class Queue{
+	private List<Integer> cola = new LinkedList<Integer>();
+	public Queue() {
+	}
+	
+	public void enqueue(dato: int) {
+		cola.add(dato);
+	}
+}

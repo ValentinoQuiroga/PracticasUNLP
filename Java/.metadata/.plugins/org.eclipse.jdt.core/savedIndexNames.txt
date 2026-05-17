@@ -1,0 +1,10 @@
+INDEX VERSION 1.134+/run/media/valentino/wspaceUSB/Java/.metadata/.plugins/org.eclipse.jdt.core
+3501672890.index
+1289576598.index
+1865797976.index
+3672224818.index
+692170672.index
+80144172.index
+2397032018.index
+969497446.index
+3544105984.index

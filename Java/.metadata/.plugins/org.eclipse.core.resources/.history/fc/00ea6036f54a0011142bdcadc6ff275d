@@ -1,0 +1,25 @@
+package tp3;
+import java.util.Queue;
+import java.util.LinkedList;
+public class AnalizarArbol {
+	
+	public double devolverMaximoPromedio(GeneralTree<AreaEmpresa> arbol) {
+		Queue<GeneralTree<AreaEmpresa>> cola = new LinkedList<GeneralTree<AreaEmpresa>>();
+		return buscarPromedioMax(arbol,cola);
+	}
+	
+	private int buscarPromedioMax(GeneralTree<AreaEmpresa> arbol, Queue<GeneralTree<AreaEmpresa>> cola) {
+		if (arbol == null) {
+			return -1;
+		}
+		int promedioActual = 0;
+		int cantEnNivel = cola.size();
+		int promedioMax = -1;
+		while (!cola.isEmpty()) {
+			for (int i = 0; i < cantEnNivel; i++) {
+				promedioActual += cola.poll().getData().getTiempo();
+			}
+			promedioActual = promedioActual / cantEnNivel;
+		}
+	}
+}

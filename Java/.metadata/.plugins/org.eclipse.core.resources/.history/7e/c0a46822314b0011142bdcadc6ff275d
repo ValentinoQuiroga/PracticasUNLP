@@ -1,0 +1,14 @@
+package tp3;
+
+public class TestEmpresa {
+
+	public static void main(String[] args) {
+		ParcialArboles a = new ParcialArboles();
+		
+		GeneralTree<Integer> a = new GeneralTree<Integer>(100);
+		
+		a.esDeSeleccion(null);
+
+	}
+
+}

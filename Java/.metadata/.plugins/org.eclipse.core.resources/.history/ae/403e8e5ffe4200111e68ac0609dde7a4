@@ -1,0 +1,8 @@
+package tp1e8;
+
+public class Queue{
+	private LinkedList<T> cola = new List<T>();
+	public Queue() {
+		
+	}
+}

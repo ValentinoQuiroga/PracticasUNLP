@@ -1,0 +1,42 @@
+package tp3;
+
+public class TestEmpresa {
+
+	public static void main(String[] args) {
+		GeneralTree M = new GeneralTree(new AreaEmpresa("", 14));
+		GeneralTree J = new GeneralTree(new AreaEmpresa("", 13));
+		GeneralTree K = new GeneralTree(new AreaEmpresa("", 25));
+		GeneralTree L = new GeneralTree(new AreaEmpresa("", 10));
+		GeneralTree A = new GeneralTree(new AreaEmpresa("", 4));
+		GeneralTree B = new GeneralTree(new AreaEmpresa("", 7));
+		GeneralTree C = new GeneralTree(new AreaEmpresa("", 5));
+		GeneralTree D = new GeneralTree(new AreaEmpresa("", 6));
+		GeneralTree E = new GeneralTree(new AreaEmpresa("", 10));
+		GeneralTree F = new GeneralTree(new AreaEmpresa("", 18));
+		GeneralTree G = new GeneralTree(new AreaEmpresa("", 9));
+		GeneralTree H = new GeneralTree(new AreaEmpresa("", 12));
+		GeneralTree I = new GeneralTree(new AreaEmpresa("", 19));
+		
+		M.addChild(J);
+		M.addChild(K);
+		M.addChild(L);
+		
+		J.addChild(A);
+		J.addChild(B);
+		J.addChild(C);
+
+		K.addChild(D);
+		K.addChild(E);
+		K.addChild(F);
+		
+		L.addChild(G);
+		L.addChild(H);
+		L.addChild(I);
+		
+		AnalizarArbol aar = new AnalizarArbol();
+		System.out.println("Promedio maximo > " + aar.devolverMaximoPromedio(M));
+		System.out.println("25 es ancestro de 6? > " + M.esAncestro(25, 6));
+
+	}
+
+}

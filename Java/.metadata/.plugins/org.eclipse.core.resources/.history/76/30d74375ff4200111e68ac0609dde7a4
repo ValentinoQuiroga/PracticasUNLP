@@ -1,0 +1,32 @@
+package tp1e8;
+import java.util.*;
+
+public class Queue{
+	private List<Integer> cola = new LinkedList<Integer>();
+	
+	public Queue() {}
+	
+	public void enqueue(int dato) {
+		cola.add(dato);
+	}
+	
+	public int dequeue() {
+		if (!cola.isEmpty()) {
+			int n = cola.getFirst();
+			cola.removeFirst();
+		}else {
+			System.out.println("Error, cola vacia");
+			return 0;
+		}
+	}
+	
+	public int head(){
+		if (!cola.isEmpty()) {
+		return cola.getFirst();
+		}else {
+			System.out.println("Error, cola vacia");
+			return 0;
+		}
+	}
+}
+

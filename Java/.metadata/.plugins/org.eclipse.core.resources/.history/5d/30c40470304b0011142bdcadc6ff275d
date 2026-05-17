@@ -1,0 +1,20 @@
+package tp3;
+
+public class ParcialArboles {
+	
+	public static boolean esDeSeleccion (GeneralTree<Integer> arbol) {
+		if (arbol == null) {
+			return false;
+		}
+		
+		if (!arbol.isLeaf()) {
+			boolean auxiliar = false;
+			for(GeneralTree<Integer> hijo: arbol.getChildren()) {
+				if (hijo.getData() == arbol.getData()) {
+					auxiliar = true;
+				}
+				return auxiliar | esDeSeleccion(hijo);
+			}
+		}
+	}
+}

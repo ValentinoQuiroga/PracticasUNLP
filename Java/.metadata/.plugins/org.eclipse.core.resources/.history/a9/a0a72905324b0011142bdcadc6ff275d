@@ -1,0 +1,34 @@
+package tp3;
+
+public class TestEmpresa {
+
+	public static void main(String[] args) {
+		ParcialArboles a = new ParcialArboles();
+
+		GeneralTree<Integer> A = new GeneralTree<Integer>(100);
+		GeneralTree<Integer> B = new GeneralTree<Integer>(100);
+		GeneralTree<Integer> C = new GeneralTree<Integer>(120);
+		
+
+		GeneralTree<Integer> D = new GeneralTree<Integer>(100);
+		GeneralTree<Integer> E = new GeneralTree<Integer>(110);
+		
+
+		GeneralTree<Integer> F = new GeneralTree<Integer>(120);
+		GeneralTree<Integer> G = new GeneralTree<Integer>(100);
+
+		A.addChild(B);
+		A.addChild(C);
+		
+
+		B.addChild(D);
+		B.addChild(E);
+
+		C.addChild(F);
+		C.addChild(G);
+		
+		System.out.println(a.esDeSeleccion(A));
+
+	}
+
+}

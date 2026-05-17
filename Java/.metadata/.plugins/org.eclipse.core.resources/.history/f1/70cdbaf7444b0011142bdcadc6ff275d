@@ -1,0 +1,86 @@
+package tp3;
+
+public class TestEmpresa {
+
+	public static void main(String[] args) {
+		ParcialArboles a = new ParcialArboles();
+
+		GeneralTree<Integer> A = new GeneralTree<Integer>(100);
+		GeneralTree<Integer> B = new GeneralTree<Integer>(100);
+		GeneralTree<Integer> C = new GeneralTree<Integer>(120);
+		
+
+		GeneralTree<Integer> D = new GeneralTree<Integer>(100);
+		GeneralTree<Integer> E = new GeneralTree<Integer>(110);
+		
+
+		GeneralTree<Integer> F = new GeneralTree<Integer>(120);
+		GeneralTree<Integer> G = new GeneralTree<Integer>(100);
+
+		GeneralTree<Integer> aa = new GeneralTree<Integer>(1);
+		GeneralTree<Integer> bb = new GeneralTree<Integer>(0);
+		GeneralTree<Integer> cc = new GeneralTree<Integer>(1);
+		
+
+		GeneralTree<Integer> dd = new GeneralTree<Integer>(0);
+		GeneralTree<Integer> ee = new GeneralTree<Integer>(0);
+		
+
+		GeneralTree<Integer> ff = new GeneralTree<Integer>(0);
+		GeneralTree<Integer> gg = new GeneralTree<Integer>(1);
+		
+
+		GeneralTree<Integer> hh = new GeneralTree<Integer>(1);
+
+		GeneralTree<Integer> aaa = new GeneralTree<Integer>(1);
+		
+		GeneralTree<Integer> bbb = new GeneralTree<Integer>(0);
+		GeneralTree<Integer> ccc = new GeneralTree<Integer>(1);
+		
+
+		GeneralTree<Integer> ddd = new GeneralTree<Integer>(0);
+		GeneralTree<Integer> eee = new GeneralTree<Integer>(0);
+
+		GeneralTree<Integer> fff = new GeneralTree<Integer>(0);
+		GeneralTree<Integer> ggg = new GeneralTree<Integer>(0);
+		
+		A.addChild(B);
+		A.addChild(C);
+		
+
+		B.addChild(D);
+		B.addChild(E);
+
+		C.addChild(F);
+		C.addChild(G);
+		
+		aa.addChild(bb);
+		aa.addChild(cc);
+		
+
+		bb.addChild(dd);
+		bb.addChild(ee);
+
+		cc.addChild(ff);
+		cc.addChild(gg);
+		
+		ff.addChild(hh);
+
+		aaa.addChild(bbb);
+		aaa.addChild(ccc);
+
+		bbb.addChild(ddd);
+		bbb.addChild(eee);
+		
+		ccc.addChild(fff);
+		//ccc.addChild(ggg);
+		
+		System.out.println(a.esDeSeleccion(A));
+		for(Integer i: a.resolver(aa)) {
+			System.out.println(i);
+		}
+		System.out.println(a.resolverA(aaa));
+
+	}
+
+}
