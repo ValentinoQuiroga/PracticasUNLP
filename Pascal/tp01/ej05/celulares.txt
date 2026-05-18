@@ -1,18 +1,24 @@
-101 250000  Samsung
-15 5  Galaxy A15 128GB
+101 250000 Samsung
+15 5 Galaxy A15 128GB
 Galaxy A15
-102 320000  Motorola
-3 6  Moto G84 256GB color azul
+102 320000 Motorola
+3 6 Moto G84 256GB color azul
 Moto G84
-104 950000  Apple
-2 4  iPhone 15 256GB negro
+104 950000 Apple
+2 0 iPhone 15 256GB negro
 iPhone 15
-105 100000  Pupita
-5 10  Telefono excelente
+105 100000 Pupita
+5 10 Telefono excelente
 Pupita Phone
 106 100000 aaaa
-1 2 Aaaaa
+1 20 Aaaaa
 Aaaa
 888 10000 iphone
-15 5 piola
+15 20 piola
 fachero Master 199
+99 99 marca
+9 30 nueve
+Ocho phone
+1 1 vacio01
+10 0 vacio
+Vacio

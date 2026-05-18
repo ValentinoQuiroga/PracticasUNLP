@@ -23,6 +23,8 @@ begin
 	writeln('3: mostar celulares coincidientes con un fragmento de descripcion');
 	writeln('4: exportar un binario a texto');
 	writeln('5: agregar celular a un binario');
+	writeln('6: cambiar stock disponible de un celular en archivo binario');
+	writeln('7: crear archivo de texto con los celulares sin stock');
 end;
 procedure leer(var carga: Text; var dato:celulares);
 begin
@@ -124,8 +126,8 @@ begin
 	leerBinario(binario, dato);
 	while (dato.cod <> valor_alto) do
 	begin
-		writeln(carga, dato.cod, ' ', dato.pre, ' ', dato.mar);
-		writeln(carga, dato.stockDis, ' ', dato.stockMin, ' ', dato.des);
+		writeln(carga, dato.cod, ' ', dato.pre, '', dato.mar);
+		writeln(carga, dato.stockMin, ' ', dato.stockDis, '', dato.des);
 		writeln(carga, dato.nom);
 		leerBinario(binario,dato);
 	end;
@@ -152,12 +154,14 @@ begin
 	readln(dato.pre);
 	writeln('Ingrese la marca: ');
 	readln(dato.mar);
+	dato.mar := (' ' + dato.mar);
 	writeln('Ingrese el stock minimo: ');
 	readln(dato.stockMin);
 	writeln('Ingrese el stock disponible: ');
 	readln(dato.stockDis);
 	writeln('Ingrese la descripcion: ');
 	readln(dato.des);
+	dato.des := (' ' + dato.des);
 	writeln('Ingrese el nombre: ');
 	readln(dato.nom);
 	write(binario, dato);
@@ -187,11 +191,50 @@ begin
 
 	if (dato.cod = codigoIngresado) then
 	begin
-		writeln('Celular encontrado');
+		seek(binario, filePos(binario) - 1);
+		read(binario,dato);
+		writeln('Ingrese la nueva cantidad de stock disponible: ');
+		readln(dato.stockDis);
+		seek(binario, filePos(binario) - 1);
+		write(binario, dato);
 	end;
+
+	close(binario);
 end;
 
+procedure opcion7();
+var
+	texto: Text;
+	nombreTexto: String;
 
+	binario: file of celulares;
+	nomBinario: String;
+	dato: celulares;
+begin
+	nombreTexto:= 'SinStock.txt';
+	assign(texto, nombreTexto);
+
+	writeln('Ingrese nombre del binario');
+	readln(nomBinario);
+	assign(binario, nomBinario);
+
+	reset(binario);
+	rewrite(texto);
+
+	leerBinario(binario, dato);
+	while (dato.cod <> valor_alto) do
+	begin
+		if (dato.stockDis = 0) then
+		begin
+			writeln(texto, dato.cod, ' ', dato.pre, dato.mar);
+			writeln(texto, dato.stockMin, ' ', dato.stockDis, dato.des);
+			writeln(texto, dato.nom);
+		end;
+		leerBinario(binario, dato);
+	end;
+	close(texto);
+	close(binario);
+end;
 
 Var
 	carga: Text;
@@ -212,6 +255,7 @@ Begin
 			4: opcion4(carga);
 			5: opcion5();
 			6: opcion6();
+			7: opcion7();
 		end;
 	end;
 end.

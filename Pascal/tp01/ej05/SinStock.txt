@@ -1,0 +1,6 @@
+104 950000 Apple
+2 0 iPhone 15 256GB negro
+iPhone 15
+1 1 vacio01
+10 0 vacio
+Vacio
