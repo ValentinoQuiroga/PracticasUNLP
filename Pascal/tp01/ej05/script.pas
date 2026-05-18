@@ -22,6 +22,7 @@ begin
 	writeln('2: listar celulares con stock menor al minimo');
 	writeln('3: mostar celulares coincidientes con un fragmento de descripcion');
 	writeln('4: exportar un binario a texto');
+	writeln('5: agregar celular a un binario');
 end;
 procedure leer(var carga: Text; var dato:celulares);
 begin
@@ -123,8 +124,8 @@ begin
 	leerBinario(binario, dato);
 	while (dato.cod <> valor_alto) do
 	begin
-		writeln(carga, dato.cod, dato.pre, dato.mar);
-		writeln(carga, dato.stockDis, dato.stockMin, dato.des);
+		writeln(carga, dato.cod, ' ', dato.pre, ' ', dato.mar);
+		writeln(carga, dato.stockDis, ' ', dato.stockMin, ' ', dato.des);
 		writeln(carga, dato.nom);
 		leerBinario(binario,dato);
 	end;
@@ -132,6 +133,66 @@ begin
 	close(binario);
 	close(carga);
 end;
+
+procedure opcion5();
+var
+	binarioNom: String;
+	binario: archivo_celurares;
+	dato: celulares;
+begin
+	writeln('Ingrese nombre del binario');
+	readln(binarioNom);
+	assign(binario, binarioNom);
+	reset(binario);
+
+	seek(binario, fileSize(binario));
+	writeln('Ingrese el codigo: ');
+	readln(dato.cod);
+	writeln('Ingrese el precio: ');
+	readln(dato.pre);
+	writeln('Ingrese la marca: ');
+	readln(dato.mar);
+	writeln('Ingrese el stock minimo: ');
+	readln(dato.stockMin);
+	writeln('Ingrese el stock disponible: ');
+	readln(dato.stockDis);
+	writeln('Ingrese la descripcion: ');
+	readln(dato.des);
+	writeln('Ingrese el nombre: ');
+	readln(dato.nom);
+	write(binario, dato);
+	close(binario);
+end;
+
+procedure opcion6();
+var
+	binarioNom: String;
+	binario: archivo_celurares;
+	dato: celulares;
+	codigoIngresado: integer;
+begin
+	writeln('Ingrese nombre del binario');
+	readln(binarioNom);
+	assign(binario, binarioNom);
+	reset(binario);
+
+	writeln('Ingrese el codigo del celular a modificar');
+	readln(codigoIngresado);
+
+	leerBinario(binario, dato);
+	while (dato.cod <> valor_alto) and (dato.cod <> codigoIngresado) do
+	begin
+		leerBinario(binario,dato);
+	end;
+
+	if (dato.cod = codigoIngresado) then
+	begin
+		writeln('Celular encontrado');
+	end;
+end;
+
+
+
 Var
 	carga: Text;
 	opcion: integer;
@@ -149,6 +210,8 @@ Begin
 			2: opcion2(carga);
 			3: opcion3(carga);
 			4: opcion4(carga);
+			5: opcion5();
+			6: opcion6();
 		end;
 	end;
 end.
