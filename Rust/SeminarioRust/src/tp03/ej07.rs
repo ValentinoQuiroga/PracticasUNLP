@@ -82,18 +82,19 @@ impl Auto{
     }
 
     pub fn calcular_precio(&self) -> f64{
-        let mut precio: f64 = self.precio_bruto;
+        let mut precioBase: f64 = self.precio_bruto;
+        let mut precioFinal: f64 = precioBase;
 
         match self.color{
-            (Color::Rojo | Color::Amarillo | Color::Azul) => precio += precio * 25.00 / 100.00,
-            _ => precio -= precio * 10.00 / 100.00
+            (Color::Rojo | Color::Amarillo | Color::Azul) => precioFinal += precioBase * 25.00 / 100.00,
+            _ => precioFinal -= precioBase * 10.00 / 100.00
         }
 
-        if self.marca == "BMW".to_string(){ precio += precio * 15.00 / 100.00}
+        if self.marca == "BMW".to_string(){ precioFinal += precioBase * 15.00 / 100.00}
 
-        if self.aaaa < 2000{ precio -= precio * 5.00 / 100.00}
+        if self.aaaa < 2000{ precioFinal -= precioBase * 5.00 / 100.00}
 
-        precio 
+        precioFinal 
     }
 }
 
@@ -195,5 +196,28 @@ mod tests{
         assert_eq!(con.autos.len(), 0);
         assert!(con.buscar_auto(&autoABuscar).is_none());
         assert_eq!(con.autos.len(), 0);
+    }
+    #[test]
+    fn precio_auto_color_primario_y_auto_color_secundario(){
+        let autoPrimario: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Rojo);
+        let autoSecundario: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Verde);
+        assert_eq!(autoPrimario.calcular_precio(), 125000.00);
+        assert_eq!(autoSecundario.calcular_precio(), 90000.00);
+    }
+    #[test]
+    fn precio_auto_1999_2000_y_2001(){
+        let auto99: Auto = Auto::new("A".to_string(), "A".to_string(), 1999, 100000.00, Color::Rojo);
+        let auto00: Auto = Auto::new("A".to_string(), "A".to_string(), 2000, 100000.00, Color::Rojo);
+        let auto01: Auto = Auto::new("A".to_string(), "A".to_string(), 2001, 100000.00, Color::Rojo);
+        assert_eq!(auto99.calcular_precio(), 120000.00);
+        assert_eq!(auto00.calcular_precio(), 125000.00);
+        assert_eq!(auto01.calcular_precio(), 125000.00);
+    }
+    #[test]
+    fn precio_auto_BMW_y_no_BMW(){
+        let autoBMW: Auto = Auto::new("BMW".to_string(), "A".to_string(), 2000, 100000.00, Color::Rojo);
+        let autoNoBMW: Auto = Auto::new("A".to_string(), "A".to_string(), 2000, 100000.00, Color::Rojo);
+        assert_eq!(autoBMW.calcular_precio(), 140000.00);
+        assert_eq!(autoNoBMW.calcular_precio(), 125000.00);
     }
 }
