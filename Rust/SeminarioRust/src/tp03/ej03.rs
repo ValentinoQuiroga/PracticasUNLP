@@ -1,3 +1,5 @@
+
+#[derive(Clone)]
 pub struct Fecha{
     dd: u32,
     mm: u32,
@@ -5,6 +7,11 @@ pub struct Fecha{
 }
 
 impl Fecha{
+    pub fn ig(&self, otra_fecha: &Fecha) -> bool{
+        if (self.dd != otra_fecha.dd) || (self.mm != otra_fecha.mm) || (self.aaaa != otra_fecha.aaaa){
+            false
+        }else{true}
+    }
     pub fn new(dd: u32, mm: u32, aaaa: u32) -> Fecha{
         Fecha{dd,mm,aaaa}
     }
