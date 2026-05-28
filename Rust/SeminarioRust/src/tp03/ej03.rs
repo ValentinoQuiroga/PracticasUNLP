@@ -100,7 +100,7 @@ impl Fecha{
         }
     }
 
-    pub fn es_mayor(&self, una_fecha: Fecha) -> bool{
+    pub fn es_mayor(&self, una_fecha: &Fecha) -> bool{
         if (una_fecha.aaaa > self.aaaa){return true}
 
         else if (una_fecha.mm > self.mm){return true}
@@ -184,21 +184,21 @@ mod tests{
     fn esFechaMayor(){
         let mut fechaA = Fecha::new(1, 1, 2026);
         let mut fechaB = Fecha::new(2, 1, 2026);
-        assert_eq!(fechaA.es_mayor(fechaB), true);
+        assert_eq!(fechaA.es_mayor(&fechaB), true);
     }
 
     #[test]
     fn noEsFechaMayor(){
         let mut fechaA = Fecha::new(1, 1, 2026);
         let mut fechaB = Fecha::new(1, 1, 2026);
-        assert_eq!(fechaB.es_mayor(fechaA), false);
+        assert_eq!(fechaB.es_mayor(&fechaA), false);
     }
 
     #[test]
     fn esFechaIgual(){
         let mut fechaA = Fecha::new(1, 1, 2026);
         let mut fechaB = Fecha::new(1, 1, 2026);
-        assert_eq!(fechaB.es_mayor(fechaA), false);
+        assert_eq!(fechaB.es_mayor(&fechaA), false);
     }
 
 }
