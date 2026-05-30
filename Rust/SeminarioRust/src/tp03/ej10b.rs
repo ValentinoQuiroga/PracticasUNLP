@@ -1,6 +1,6 @@
 use std::collections::{HashMap, LinkedList, VecDeque};
 use crate::tp03::ej03::Fecha;
-struct Biblioteca{nombre: String, direccion: String, libros_disponibles: HashMap<u64, (u16, Libro)>, prestamos_efectuados: VecDeque<Prestamo>}
+struct Biblioteca{nombre: String, direccion: String, libros_disponibles: HashMap<u64, (u16, Libro)>, prestamos_efectuados: HashMap<String, VecDeque<Prestamo>>}
 #[derive(Clone)]
 struct Libro{isbn: u64, titulo: String, autor: String, paginas: u16, genero: Genero}
 struct Prestamo{libro: Libro, cliente: Cliente, vencimiento: Fecha, devolucion: Option<Fecha>, devuelto: bool}
@@ -12,7 +12,7 @@ enum Genero{novela, infantil, tecnico, otros}
 impl Biblioteca{
     fn new(nombre: String, direccion: String) -> Biblioteca{
         let libros_disponibles: HashMap<u64, (u16, Libro)> = HashMap::new();
-        let prestamos_efectuados: VecDeque<Prestamo> = VecDeque::new();
+        let prestamos_efectuados: HashMap<String, VecDeque<Prestamo>> = HashMap::new();
         Biblioteca { nombre, direccion, libros_disponibles, prestamos_efectuados }
     }
     fn agregar_libro(&mut self, libro: Libro){
@@ -24,8 +24,8 @@ impl Biblioteca{
             None => return 0
         }
     }
-    fn decrementar_cantidad_de_copias(&mut self, libro: &Libro){
-        match self.libros_disponibles.get_mut(&libro.isbn){
+    fn decrementar_cantidad_de_copias(&mut self, isbn: u64){
+        match self.libros_disponibles.get_mut(&isbn){
             Some(dato) => { dato.0 -= 1}
             None => ()
         }
@@ -38,71 +38,97 @@ impl Biblioteca{
     }
     fn contar_prestamos_de_cliente(&self, cliente: &Cliente) -> u8{
         let mut cant: u8 = 0;
-        for i in 0..self.prestamos_efectuados.len(){
-            if self.prestamos_efectuados[i].cliente.ig(cliente) && !self.prestamos_efectuados[i].devuelto{ cant += 1}
+        let prestamos: Option<&VecDeque<Prestamo>> = self.prestamos_efectuados.get(&cliente.correo_e);
+        match prestamos{
+            Some(lista) => {
+                for i in 0..lista.len(){
+                    if !lista[i].devuelto{ cant += 1;}
+                }
+                cant
+            }
+            None => 0
         }
-        cant
     }
     fn realizar_prestamo(&mut self, libro: Libro, cliente: Cliente, vencimiento: Fecha) -> bool{
-        if let Some(dato) = self.libros_disponibles.get(&libro.isbn){
-            if (self.contar_prestamos_de_cliente(&cliente) < 5) &&  (dato.0 > 0){
-                self.decrementar_cantidad_de_copias(&libro);
-                self.prestamos_efectuados.push_back(Prestamo::new(libro, cliente, vencimiento));
-                true
-            }else{false}
-        }else{false}
+        if let Some(dato) = self.libros_disponibles.get(&libro.isbn){ 
+            if dato.0 > 0{
+                if self.prestamos_efectuados.contains_key(&cliente.correo_e){
+                    let cant = self.contar_prestamos_de_cliente(&cliente);
+                    if cant > 5 {return false}
+                }else{
+                    let mut prestamos: VecDeque<Prestamo> = VecDeque::new();
+                    self.prestamos_efectuados.insert(cliente.correo_e.clone(), prestamos);
+                    
+                }
+                self.decrementar_cantidad_de_copias(libro.isbn);
+                self.prestamos_efectuados.get_mut(&cliente.correo_e).unwrap().push_back(Prestamo::new(libro, cliente, vencimiento));
+                return true
+            }
+        }
+        false
     }
     fn ver_prestamos_a_vencer(&self, fecha: &Fecha, dias_restantes: u8) -> Vec<&Prestamo>{
         let mut lista: Vec<&Prestamo> = Vec::new();
         let mut fecha_limite: Fecha = fecha.clone();
         fecha_limite.sumar_dias(dias_restantes as u32);
-        for i in 0..self.prestamos_efectuados.len(){
-            let fecha_vencimiento: &Fecha = &self.prestamos_efectuados[i].vencimiento;
-            let devuelto: bool = self.prestamos_efectuados[i].devuelto;
-            if fecha.es_fecha_valida() && fecha_vencimiento.es_mayor(fecha) && fecha_limite.es_mayor(fecha_vencimiento) && !devuelto{
-                lista.push(&self.prestamos_efectuados[i]);
+        for (correo, prestamos) in &self.prestamos_efectuados{
+            for i in 0..prestamos.len(){
+                let fecha_vencimiento: &Fecha = &prestamos[i].vencimiento;
+                let devuelto: bool = prestamos[i].devuelto;
+                if fecha.es_fecha_valida() && fecha_vencimiento.es_mayor(fecha) && fecha_limite.es_mayor(fecha_vencimiento) && !devuelto{
+                    lista.push(&prestamos[i]);
+                }
             }
         }
         lista
     }
     fn ver_prestamos_vencidos(&self, fecha: &Fecha) -> Vec<&Prestamo>{
         let mut lista: Vec<&Prestamo> = Vec::new();
-        for i in 0..self.prestamos_efectuados.len(){
-            let fecha_vencimiento: &Fecha = &self.prestamos_efectuados[i].vencimiento;
-            let devuelto: bool = self.prestamos_efectuados[i].devuelto;
-            if fecha.es_fecha_valida() && fecha.es_mayor(fecha_vencimiento) && !devuelto{
-                lista.push(&self.prestamos_efectuados[i]);
+        for (correo, prestamos) in &self.prestamos_efectuados{
+            for i in 0..prestamos.len(){
+                let fecha_vencimiento: &Fecha = &prestamos[i].vencimiento;
+                let devuelto: bool = prestamos[i].devuelto;
+                if fecha.es_fecha_valida() && fecha.es_mayor(fecha_vencimiento) && !devuelto{
+                    lista.push(&prestamos[i]);
+                }
             }
         }
         lista
     }
     fn buscar_prestamo(&self, libro: &Libro, cliente: &Cliente) -> Option<&Prestamo>{
-        let mut pos: usize = 0;
-        let mut encontrado: bool = false;
 
-        while pos < self.prestamos_efectuados.len() && !encontrado{
-            let prestamo: &Prestamo = &self.prestamos_efectuados[pos];
-            if prestamo.libro.ig(libro) && prestamo.cliente.ig(cliente) && !prestamo.devuelto{
-                encontrado = true;
-                return Some(prestamo);
-            }else{ pos += 1;}
+        if let Some(prestamos) = self.prestamos_efectuados.get(&cliente.correo_e){
+            let mut pos: usize = 0;
+            let mut encontrado: bool = false;
+
+            while pos < prestamos.len() && !encontrado{
+                let prestamo: &Prestamo = &prestamos[pos];
+                if prestamo.libro.ig(libro) && prestamo.cliente.ig(cliente){
+                    encontrado = true;
+                    return Some(prestamo);
+                }else{ pos += 1;}
+            }
         }
+        
         return None
     }
-    fn devolver_libro(&mut self, libro: &Libro, cliente: &Cliente, fecha: &Fecha){
-        let mut pos: usize = 0;
-        let mut encontrado: bool = false;
+    fn devolver_libro(&mut self, libro: &Libro, cliente: &Cliente, fecha: Fecha){
 
-        while pos < self.prestamos_efectuados.len() && !encontrado{
-            let mut prestamo: &mut Prestamo = &mut self.prestamos_efectuados[pos];
-            if prestamo.libro.ig(libro) && prestamo.cliente.ig(cliente) && !prestamo.devuelto{
-                prestamo.devuelto = true;
-                prestamo.devolucion = Some(fecha.clone());
-                encontrado = true;
-            }else{ pos += 1;}
+        if let Some(prestamos) = self.prestamos_efectuados.get_mut(&cliente.correo_e){
+            let mut pos: usize = 0;
+            let mut encontrado: bool = false;
+
+            while pos < prestamos.len() && !encontrado{
+                let prestamo = &mut prestamos[pos];
+                if prestamo.libro.ig(libro) && !prestamo.devuelto{
+                    prestamo.devuelto = true;
+                    prestamo.devolucion = Some(fecha.clone());
+                    encontrado = true;
+                }else{ pos += 1;}
+            }
+
+            if encontrado{self.incrementar_cantidad_de_copias(libro);}
         }
-
-        if encontrado{self.incrementar_cantidad_de_copias(libro);}
     }
 
 
@@ -126,7 +152,7 @@ impl Libro{
         Libro { isbn, titulo, autor, paginas, genero }
     }
     fn ig(&self, otro_libro: &Libro) -> bool{
-        if (self.autor != otro_libro.autor)||(self.genero.ig(&otro_libro.genero))||(self.isbn != otro_libro.isbn)||(self.paginas != otro_libro.paginas)||(self.titulo != otro_libro.titulo){
+        if (self.autor != otro_libro.autor)||!(self.genero.ig(&otro_libro.genero))||(self.isbn != otro_libro.isbn)||(self.paginas != otro_libro.paginas)||(self.titulo != otro_libro.titulo){
             return false
         }else{ return true}}
 }
@@ -158,7 +184,7 @@ mod tests{
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
         let l1: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
         bib.agregar_libro(l1.clone());
-        bib.decrementar_cantidad_de_copias(&l1);
+        bib.decrementar_cantidad_de_copias(l1.isbn);
         assert_eq!(bib.obtener_cantidad_de_copias(&l1), 0);
     }
     #[test]
@@ -186,5 +212,11 @@ mod tests{
         bib.realizar_prestamo(l3.clone(), cli.clone(), ven.clone());
 
         assert_eq!(bib.contar_prestamos_de_cliente(&cli),3);
+        assert_eq!(bib.obtener_cantidad_de_copias(&l1),0);
+
+        bib.devolver_libro(&l1, &cli, ven);
+        
+        assert_eq!(bib.obtener_cantidad_de_copias(&l1),1);
+        assert_eq!(bib.contar_prestamos_de_cliente(&cli),2);
     }
 }

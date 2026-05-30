@@ -7,12 +7,25 @@ pub struct Triangulo{
     ladoC :f32,
 }
 
+enum Tipo{
+    Equilatero, Escaleno, Isoseles
+}
+impl Tipo{
+    fn ig(&self, otro_tipo: &Tipo) -> bool{
+        match (self, otro_tipo){
+            (Tipo::Equilatero,Tipo::Equilatero) => true,
+            (Tipo::Escaleno,Tipo::Escaleno) => true,
+            (Tipo::Isoseles,Tipo::Isoseles) => true,
+            _ => false
+        }
+    }
+}
 impl Triangulo{
     pub fn new(ladoA: f32, ladoB: f32, ladoC: f32) -> Triangulo{
         if (ladoA + ladoB < ladoC) | (ladoA + ladoC < ladoB) | (ladoB + ladoC < ladoA){ panic!("Triangulo incorrecto")}
         else{Triangulo { ladoA, ladoB, ladoC }}
     }
-    pub fn determinarTipo(&self) -> &str{
+    pub fn determinarTipo(&self) -> Tipo{
         let mut AB = false;
         let mut AC = false;
         let mut BC = false;
@@ -20,9 +33,9 @@ impl Triangulo{
         if self.ladoA == self.ladoC{AC = true}
         if self.ladoB == self.ladoC{BC = true}
 
-        if AB && BC {return "Equilatero"}
-        else if AB ^ BC ^ AC {return "Isoseles"}
-        else{return "Escaleno"}
+        if AB && BC {return Tipo::Equilatero}
+        else if AB ^ BC ^ AC {return Tipo::Isoseles}
+        else{return Tipo::Escaleno}
     }
     pub fn calcular_area(&self) -> f32{
         let s = (self.ladoA + self.ladoB + self.ladoC) / 2.00;
@@ -54,13 +67,13 @@ mod tests{
     #[test]
     fn trianguloEquilatero(){
         let equilatero = Triangulo::new(1.00, 1.00, 1.00);
-        assert_eq!(equilatero.determinarTipo(), "Equilatero");
+        assert_eq!(equilatero.determinarTipo().ig(&Tipo::Equilatero), true);
     }
 
     #[test]
     fn trianguloEscaleno(){
         let escaleno = Triangulo::new(1.00, 2.00, 3.00);
-        assert_eq!(escaleno.determinarTipo(), "Escaleno");
+        assert_eq!(escaleno.determinarTipo().ig(&Tipo::Escaleno), true);
     }
 
     #[test]
@@ -68,9 +81,9 @@ mod tests{
         let isoselesA = Triangulo::new(1.00, 1.00, 2.00);
         let isoselesB = Triangulo::new(1.00, 2.00, 1.00);
         let isoselesC = Triangulo::new(2.00, 1.00, 1.00);
-        assert_eq!(isoselesA.determinarTipo(), "Isoseles");
-        assert_eq!(isoselesB.determinarTipo(), "Isoseles");
-        assert_eq!(isoselesC.determinarTipo(), "Isoseles");
+        assert_eq!(isoselesA.determinarTipo().ig(&Tipo::Isoseles), true);
+        assert_eq!(isoselesB.determinarTipo().ig(&Tipo::Isoseles), true);
+        assert_eq!(isoselesC.determinarTipo().ig(&Tipo::Isoseles), true);
     }
 
     #[test]
