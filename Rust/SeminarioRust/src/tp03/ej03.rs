@@ -101,11 +101,11 @@ impl Fecha{
     }
 
     pub fn es_mayor(&self, una_fecha: &Fecha) -> bool{
-        if (una_fecha.aaaa > self.aaaa){return true}
+        if (una_fecha.aaaa < self.aaaa){return true}
 
-        else if (una_fecha.mm > self.mm){return true}
+        else if (una_fecha.mm < self.mm){return true}
     
-        else if (una_fecha.dd > self.dd){return true}
+        else if (una_fecha.dd < self.dd){return true}
         else{ return false}
 
     }

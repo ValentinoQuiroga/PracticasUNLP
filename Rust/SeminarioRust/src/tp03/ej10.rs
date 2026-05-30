@@ -89,7 +89,7 @@ impl Biblioteca{
         }
         return None
     }
-    fn devolver_libro(&mut self, libro: &Libro, cliente: &Cliente, fecha: &Fecha){
+    fn devolver_libro(&mut self, libro: &Libro, cliente: &Cliente, fecha: Fecha){
         let mut pos: usize = 0;
         let mut encontrado: bool = false;
 
@@ -175,16 +175,34 @@ mod tests{
         let l1: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
         let l2: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
         let l3: Libro = Libro::new(102, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let l4: Libro = Libro::new(103, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
         bib.agregar_libro(l1.clone());
         bib.agregar_libro(l2.clone());
         bib.agregar_libro(l3.clone());
+        bib.agregar_libro(l4.clone());
 
-        let cli: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string(),);
+        let cli: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let cliB: Cliente = Cliente::new("A".to_string(), "A".to_string(), "B".to_string());
         let ven: Fecha = Fecha::new(16, 04, 2027);
+        let vencido: Fecha = Fecha::new(10, 04, 2026);
+        let act: Fecha = Fecha::new(10, 04, 2027);
         bib.realizar_prestamo(l1.clone(), cli.clone(), ven.clone());
         bib.realizar_prestamo(l2.clone(), cli.clone(), ven.clone());
         bib.realizar_prestamo(l3.clone(), cli.clone(), ven.clone());
+        bib.realizar_prestamo(l4.clone(), cliB.clone(), vencido.clone());
 
         assert_eq!(bib.contar_prestamos_de_cliente(&cli),3);
+        assert_eq!(bib.contar_prestamos_de_cliente(&cliB),1);
+        assert_eq!(bib.obtener_cantidad_de_copias(&l1),0);
+
+        bib.devolver_libro(&l1, &cli, ven);
+        
+        assert_eq!(bib.obtener_cantidad_de_copias(&l1),1);
+        assert_eq!(bib.contar_prestamos_de_cliente(&cli),2);
+
+        let a_vencer = bib.ver_prestamos_a_vencer(&act, 7);
+        assert_eq!(a_vencer.len(), 2);
+        let vencidos = bib.ver_prestamos_vencidos(&act);
+        assert_eq!(vencidos.len(), 1);
     }
 }
