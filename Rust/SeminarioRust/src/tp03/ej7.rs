@@ -26,6 +26,8 @@ pub enum Color{
     Negro
 }
 
+
+    //STRUCT AGREGADO ENTREGABLE
 pub struct Registro{
     autos_rojos: f64,
     autos_verdes: f64,
@@ -41,7 +43,7 @@ impl Registro{
     }
 }
 impl ConsecionarioAuto{
-
+    //FUNCIONALIDAD AGREGADA ENTREGABLE (TEST REALIZADOS EN TESTS)
     pub fn recaudacion_por_color(&self) -> Registro{
         let mut registro_recaudacion: Registro = Registro::new(0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
         for i in 0..self.autos.len(){
@@ -58,6 +60,7 @@ impl ConsecionarioAuto{
         }
         registro_recaudacion
     }
+
 
     pub fn new(nombre: String, direccion: String, capacidad_maxima: usize) -> ConsecionarioAuto{
         let autos: VecDeque<Auto> = VecDeque::with_capacity(capacidad_maxima as usize);
@@ -151,6 +154,9 @@ impl Color{
 #[cfg(test)]
 mod tests{
     use super::*;
+
+
+    //TEST AGREGADO ENTREGABLE
     #[test]
     fn test_recaudacion_por_color_rojo_y_verde(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
@@ -173,6 +179,8 @@ mod tests{
         assert_eq!(registro.autos_azules, 0.00);
     }
 
+
+    //TEST AGREGADO ENTREGABLE
     #[test]
     fn test_recaudacion_por_color_sin_autos(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
