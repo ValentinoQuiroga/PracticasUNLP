@@ -9,7 +9,7 @@ pub struct ConsecionarioAuto{
 pub struct Auto{
     marca: String,
     modelo: String,
-    aaaa: u32,
+    aaaa: u16,
     precio_bruto: f64,
     color: Color
 }
@@ -71,8 +71,9 @@ impl ConsecionarioAuto{
 }
 
 impl Auto{
-    pub fn new(marca: String, modelo: String, aaaa: u32, precio_bruto: f64, color: Color) -> Auto{
-        Auto{marca, modelo, aaaa, precio_bruto, color}
+    pub fn new(marca: String, modelo: String, aaaa: u16, precio_bruto: f64, color: Color) -> Auto{
+        if precio_bruto < 0.00{ panic!("Se ingreso un precio bruto negativo");}
+        else{Auto{marca, modelo, aaaa, precio_bruto, color}}
     }
 
     pub fn eq(&self, auto: &Auto) -> bool{
@@ -116,13 +117,18 @@ impl Color{
 mod tests{
     use super::*;
     #[test]
+    #[should_panic(expected = "Se ingreso un precio bruto negativo")]
+    fn test_crear_auto_precio_negativo(){
+        let auto: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, -1.00, Color::Negro);
+    }
+    #[test]
     fn test_agregar_auto_en_concensionario_con_espacio(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         assert_eq!(con.agregar_auto(auto), true);
     }
     #[test]
-    fn test_agregar_auto_en_concensionario_Sin_Espacio(){
+    fn test_agregar_auto_en_concensionario_sin_espacio(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 1);
         let auto_a: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         let auto_b: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);

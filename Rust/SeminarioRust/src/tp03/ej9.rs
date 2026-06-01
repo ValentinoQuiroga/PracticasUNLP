@@ -1,5 +1,5 @@
 use std::collections::VecDeque;
-use crate::tp03::ej03::Fecha;
+use crate::tp03::ej3::Fecha;
 struct Veterinaria{
     nombre: String,
     direccion: String,

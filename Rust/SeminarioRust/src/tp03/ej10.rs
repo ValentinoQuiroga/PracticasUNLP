@@ -1,6 +1,6 @@
 use core::panic;
-use std::collections::{HashMap, LinkedList, VecDeque};
-use crate::tp03::ej03::Fecha;
+use std::collections::{HashMap, VecDeque};
+use crate::tp03::ej3::Fecha;
 struct Biblioteca{nombre: String, direccion: String, libros_disponibles: HashMap<u64, (u16, Libro)>, prestamos_efectuados: VecDeque<Prestamo>}
 #[derive(Clone)]
 struct Libro{isbn: u64, titulo: String, autor: String, paginas: u16, genero: Genero}
@@ -8,7 +8,7 @@ struct Prestamo{libro: Libro, cliente: Cliente, vencimiento: Fecha, devolucion: 
 #[derive(Clone)]
 struct Cliente{nombre: String, telefono: String, correo_e: String}
 #[derive(Clone)]
-enum Genero{novela, infantil, tecnico, otros}
+enum Genero{Novela, Infantil, Tecnico, Otros}
 
 impl Biblioteca{
     fn new(nombre: String, direccion: String) -> Biblioteca{
@@ -172,10 +172,10 @@ impl Libro{
 impl Genero{
     fn ig(&self, otro_genero: &Genero) -> bool{
         match (self, otro_genero){
-            (Genero::infantil, Genero::infantil) => true,
-            (Genero::novela, Genero::novela) => true,
-            (Genero::tecnico, Genero::tecnico) => true,
-            (Genero::otros, Genero::otros) => true,
+            (Genero::Infantil, Genero::Infantil) => true,
+            (Genero::Novela, Genero::Novela) => true,
+            (Genero::Tecnico, Genero::Tecnico) => true,
+            (Genero::Otros, Genero::Otros) => true,
             _ => false
         }
     }
@@ -187,7 +187,7 @@ mod tests{
     #[test]
     fn test_agregar_libro_nuevo(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
 
         assert_eq!(bib.libros_disponibles.len(), 1);
@@ -197,7 +197,7 @@ mod tests{
     #[test]
     fn test_agregar_libro_ya_agregado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.agregar_libro(libro.clone());
 
@@ -209,7 +209,7 @@ mod tests{
     #[test]
     fn test_obtener_cantidad_de_copias_libro_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
 
         assert_eq!(bib.obtener_cantidad_de_copias(&libro), 1);
@@ -218,7 +218,7 @@ mod tests{
     #[test]
     fn test_obtener_cantidad_de_copias_libro_no_registrado(){
         let bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
 
         assert_eq!(bib.obtener_cantidad_de_copias(&libro), 0);
     }
@@ -227,7 +227,7 @@ mod tests{
     #[test]
     fn test_decrementar_cantidad_de_copias_libro_registrado_con_una_copia(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.decrementar_cantidad_de_copias(&libro);
 
@@ -237,7 +237,7 @@ mod tests{
     #[should_panic(expected = "No hay mas copias disponibles de este libro")]
     fn test_decrementar_cantidad_de_copias_libro_registrado_sin_copia(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.decrementar_cantidad_de_copias(&libro);
         bib.decrementar_cantidad_de_copias(&libro);
@@ -245,8 +245,8 @@ mod tests{
     #[test]
     fn test_decrementar_cantidad_de_copias_libro_no_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.decrementar_cantidad_de_copias(&libro_no_registrado);
 
@@ -257,7 +257,7 @@ mod tests{
     #[test]
     fn test_incrementar_cantidad_de_copias_libro_registrado_con_una_copia(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.incrementar_cantidad_de_copias(&libro);
 
@@ -267,7 +267,7 @@ mod tests{
     #[should_panic(expected = "Se alcanzo el maximo de libros")]
     fn test_incrementar_cantidad_de_copias_libro_registrado_con_maximo_de_copias(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         if let Some(dato) = bib.libros_disponibles.get_mut(&libro.isbn){
             dato.0 = 65535;
@@ -277,8 +277,8 @@ mod tests{
     #[test]
     fn test_incrementar_cantidad_de_copias_libro_no_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.incrementar_cantidad_de_copias(&libro_no_registrado);
 
@@ -289,7 +289,7 @@ mod tests{
     #[test]
     fn test_realizar_prestamo_libro_con_cinco_copias_cliente_con_cuatro_prestamos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.incrementar_cantidad_de_copias(&libro);
         bib.incrementar_cantidad_de_copias(&libro);
@@ -312,8 +312,8 @@ mod tests{
     #[test]
     fn test_realizar_prestamo_libro_no_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
 
 
@@ -328,7 +328,7 @@ mod tests{
     #[test]
     fn test_realizar_prestamo_libro_con_cero_copias(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.decrementar_cantidad_de_copias(&libro);
 
@@ -344,7 +344,7 @@ mod tests{
     #[test]
     fn test_realizar_prestamo_cliente_con_cinco_prestamos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
         bib.incrementar_cantidad_de_copias(&libro);
         bib.incrementar_cantidad_de_copias(&libro);
@@ -369,7 +369,7 @@ mod tests{
     #[test]
     fn test_realizar_prestamo_fecha_vencimiento_invalida(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         bib.agregar_libro(libro.clone());
 
 
@@ -385,7 +385,7 @@ mod tests{
     #[test]
     fn test_devolver_libro_registrado_prestamo_vigente_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(01, 06, 2026);
@@ -401,7 +401,7 @@ mod tests{
     #[test]
     fn test_devolver_libro_registrado_prestamo_ya_saldado_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(01, 06, 2026);
@@ -419,7 +419,7 @@ mod tests{
     #[should_panic(expected = "Se alcanzo el maximo de libros")]
     fn test_devolver_libro_registrado_con_copias_maximas_disponibles(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(01, 06, 2026);
@@ -439,7 +439,7 @@ mod tests{
     #[test]
     fn test_devolver_libro_registrado_prestamo_no_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_hoy: Fecha = Fecha::new(01, 06, 2026);
 
@@ -453,8 +453,8 @@ mod tests{
     #[test]
     fn test_devolver_libro_no_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(01, 06, 2026);
@@ -470,7 +470,7 @@ mod tests{
     #[test]
     fn test_devolver_libro_fecha_invalida(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
         let fecha_hoy_invalida: Fecha = Fecha::new(100, 06, 2026);
@@ -486,7 +486,7 @@ mod tests{
     #[test]
     fn test_contar_prestamos_cliente_no_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let cliente_no_registrado: Cliente = Cliente::new("A".to_string(), "A".to_string(), "B".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
@@ -500,7 +500,7 @@ mod tests{
     #[test]
     fn test_contar_prestamos_cliente_sin_prestamos_pendientes(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
@@ -515,7 +515,7 @@ mod tests{
     #[test]
     fn test_contar_prestamos_cliente_con_prestamos_pendientes(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
 
@@ -532,7 +532,7 @@ mod tests{
     #[test]
     fn test_ver_prestamos_a_vencer(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
@@ -552,7 +552,7 @@ mod tests{
     #[test]
     fn test_ver_prestamos_a_vencer_prestamos_con_vencimiento_fuera_de_rango(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
@@ -568,7 +568,7 @@ mod tests{
     #[test]
     fn test_ver_prestamos_a_vencer_prestamos_vencidos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(19, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
@@ -584,7 +584,7 @@ mod tests{
     #[test]
     fn test_ver_prestamos_a_vencer_prestamos_devueltos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
@@ -612,7 +612,7 @@ mod tests{
     #[test]
     fn test_ver_prestamos_a_vencidos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(10, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
@@ -632,7 +632,7 @@ mod tests{
     #[test]
     fn test_ver_prestamos_a_vencer_prestamos_vencidos_devueltos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(10, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
@@ -650,7 +650,7 @@ mod tests{
     #[test]
     fn test_ver_prestamos_vencidos_sin_prestamos_vencidos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);

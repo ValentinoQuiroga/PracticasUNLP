@@ -11,7 +11,8 @@ pub struct Examen{
 
 impl Examen{
     pub fn new(nombre: String, nota: f32) -> Examen{
-        Examen{nombre, nota}
+        if nota < 0.00 || nota > 10.00{panic!("Nota fuera de rango 0-10")}
+        else{Examen{nombre, nota}}
     }
 }
 
@@ -57,6 +58,16 @@ impl Estudiante{
 #[cfg(test)]
 mod tests{
     use super::*;
+        #[test]
+        #[should_panic(expected = "Nota fuera de rango 0-10")]
+        fn test_crear_examen_nota_menor_a_cero(){
+            let ex = Examen::new("A".to_string(), -1.00);
+        }
+        #[test]
+        #[should_panic(expected = "Nota fuera de rango 0-10")]
+        fn test_crear_examen_nota_mayor_a_10(){
+            let ex = Examen::new("A".to_string(), 11.00);
+        }
         #[test]
         fn test_promedio(){
             let ex1 = Examen::new("".to_string(), 10.00);

@@ -1,22 +1,9 @@
 use std::collections::VecDeque;
-pub struct Cancion{
-    titulo: String,
-    artista: String,
-    genero: Genero
-}
+pub struct Cancion{titulo: String, artista: String, genero: Genero}
 
-pub enum Genero{
-    ROCK,
-    POP,
-    RAP,
-    JAZZ,
-    OTROS
-}
+pub enum Genero{ROCK, POP, RAP, JAZZ, OTROS}
 
-pub struct Playlist{
-    lista: VecDeque<Cancion>,
-    nombre: String
-}
+pub struct Playlist{ lista: VecDeque<Cancion>, nombre: String}
 
 impl Genero{
     pub fn ig(&self, otro_genero: &Genero) -> bool{
