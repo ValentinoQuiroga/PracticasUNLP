@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 
 pub struct ConsecionarioAuto{
     nombre: String,
@@ -6,6 +6,8 @@ pub struct ConsecionarioAuto{
     capacidad_maxima: usize,
     autos: VecDeque<Auto>
 }
+#[derive(Clone)]
+
 pub struct Auto{
     marca: String,
     modelo: String,
@@ -13,6 +15,7 @@ pub struct Auto{
     precio_bruto: f64,
     color: Color
 }
+#[derive(Clone)]
 
 pub enum Color{
     Rojo,
@@ -23,7 +26,39 @@ pub enum Color{
     Negro
 }
 
+pub struct Registro{
+    autos_rojos: f64,
+    autos_verdes: f64,
+    autos_azules: f64,
+    autos_amarillos: f64,
+    autos_blancos: f64,
+    autos_negros: f64,
+}
+
+impl Registro{
+    pub fn new(autos_rojos: f64,autos_verdes: f64,autos_azules: f64,autos_amarillos: f64,autos_blancos: f64,autos_negros: f64,) -> Registro{
+        Registro { autos_rojos, autos_verdes, autos_azules, autos_amarillos, autos_blancos, autos_negros }
+    }
+}
 impl ConsecionarioAuto{
+
+    pub fn recaudacion_por_color(&self) -> Registro{
+        let mut registro_recaudacion: Registro = Registro::new(0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
+        for i in 0..self.autos.len(){
+            let precio = self.autos[i].calcular_precio();
+            match self.autos[i].color{
+                Color::Rojo => registro_recaudacion.autos_rojos += precio,
+                Color::Verde => registro_recaudacion.autos_verdes += precio,
+                Color::Azul => registro_recaudacion.autos_azules += precio,
+                Color::Amarillo => registro_recaudacion.autos_amarillos += precio,
+                Color::Blanco => registro_recaudacion.autos_blancos += precio,
+                Color::Negro => registro_recaudacion.autos_negros += precio,
+                _ => panic!("Auto de color no registrado"),
+            }
+        }
+        registro_recaudacion
+    }
+
     pub fn new(nombre: String, direccion: String, capacidad_maxima: usize) -> ConsecionarioAuto{
         let autos: VecDeque<Auto> = VecDeque::with_capacity(capacidad_maxima as usize);
         ConsecionarioAuto{nombre, direccion, capacidad_maxima, autos}
@@ -117,6 +152,42 @@ impl Color{
 mod tests{
     use super::*;
     #[test]
+    fn test_recaudacion_por_color_rojo_y_verde(){
+        let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
+        let auto_rojo: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Rojo);
+        let auto_verde: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Verde);
+        assert_eq!(auto_rojo.calcular_precio(), 125000.00);
+        assert_eq!(auto_verde.calcular_precio(), 90000.00);
+
+        con.agregar_auto(auto_rojo.clone());
+        con.agregar_auto(auto_rojo.clone());
+        con.agregar_auto(auto_verde);
+        
+
+        let registro = con.recaudacion_por_color();
+        assert_eq!(registro.autos_rojos, 250000.00);
+        assert_eq!(registro.autos_verdes, 90000.00);
+        assert_eq!(registro.autos_negros, 0.00);
+        assert_eq!(registro.autos_blancos, 0.00);
+        assert_eq!(registro.autos_amarillos, 0.00);
+        assert_eq!(registro.autos_azules, 0.00);
+    }
+
+    #[test]
+    fn test_recaudacion_por_color_sin_autos(){
+        let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
+        
+        let registro = con.recaudacion_por_color();
+        assert_eq!(registro.autos_rojos, 0.00);
+        assert_eq!(registro.autos_verdes, 0.00);
+        assert_eq!(registro.autos_negros, 0.00);
+        assert_eq!(registro.autos_blancos, 0.00);
+        assert_eq!(registro.autos_amarillos, 0.00);
+        assert_eq!(registro.autos_azules, 0.00);
+    }
+
+
+    #[test]
     #[should_panic(expected = "Se ingreso un precio bruto negativo")]
     fn test_crear_auto_precio_negativo(){
         let auto: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, -1.00, Color::Negro);
@@ -205,10 +276,19 @@ mod tests{
     }
     #[test]
     fn test_precio_auto_color_primario_y_auto_color_secundario(){
+        let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto_primario: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Rojo);
         let auto_secundario: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Verde);
         assert_eq!(auto_primario.calcular_precio(), 125000.00);
         assert_eq!(auto_secundario.calcular_precio(), 90000.00);
+
+        con.agregar_auto(auto_primario);
+        con.agregar_auto(auto_secundario);
+        
+
+        let registro = con.recaudacion_por_color();
+        assert_eq!(registro.autos_rojos, 125000.00);
+        assert_eq!(registro.autos_verdes, 90000.00);
     }
     #[test]
     fn test_precio_auto_1999_2000_y_2001(){
