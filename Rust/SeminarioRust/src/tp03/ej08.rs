@@ -136,7 +136,7 @@ impl Playlist{
 mod tests{
     use super::*;
     #[test]
-    fn eliminar_cancion(){
+    fn test_eliminar_cancion(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_a_eliminar: Cancion = can.clonar();
@@ -146,7 +146,7 @@ mod tests{
         assert_eq!(p.lista.len(), 0);
     }
     #[test]
-    fn eliminar_cancion_no_agregada(){
+    fn test_eliminar_cancion_no_agregada(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_a_eliminar: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -156,7 +156,7 @@ mod tests{
         assert_eq!(p.lista.len(), 1);
     }
     #[test]
-    fn mover_cancion(){
+    fn test_mover_cancion(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -169,7 +169,7 @@ mod tests{
         assert_eq!(p.lista[2].ig(&can_a), true);
     }
     #[test]
-    fn mover_cancion_posicion_mayor_a_cantidad(){
+    fn test_mover_cancion_posicion_mayor_a_cantidad(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -182,7 +182,7 @@ mod tests{
         assert_eq!(p.lista[2].ig(&can_a), true);
     }
     #[test]
-    fn mover_cancion_no_agregada(){
+    fn test_mover_cancion_no_agregada(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -198,21 +198,21 @@ mod tests{
         assert_eq!(p.lista.len(), 3);
     }
     #[test]
-    fn buscar_cancion(){
+    fn test_buscar_cancion(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         p.agregar_cancion(can.clonar());
         assert_eq!(p.buscar_cancion_por_nombre("A".to_string()).unwrap().ig(&can), true);
     }
     #[test]
-    fn buscar_cancion_no_agregada(){
+    fn test_buscar_cancion_no_agregada(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         p.agregar_cancion(can);
         assert_eq!(p.buscar_cancion_por_nombre("B".to_string()).is_none(), true);
     }
     #[test]
-    fn obtener_canciones_por_genero(){
+    fn test_obtener_canciones_por_genero(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -226,7 +226,7 @@ mod tests{
         assert_eq!(nueva_lista[1].ig(&can_c), true);
     }
     #[test]
-    fn obtener_canciones_por_genero_no_agregado(){
+    fn test_obtener_canciones_por_genero_no_agregado(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -239,7 +239,7 @@ mod tests{
         assert_eq!(nueva_lista.is_empty(), true);
     }
     #[test]
-    fn obtener_canciones_por_artista(){
+    fn test_obtener_canciones_por_artista(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -253,7 +253,7 @@ mod tests{
         assert_eq!(nueva_lista[1].ig(&can_c), true);
     }
     #[test]
-    fn obtener_canciones_por_artista_no_agregado(){
+    fn test_obtener_canciones_por_artista_no_agregado(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
@@ -266,13 +266,13 @@ mod tests{
         assert_eq!(nueva_lista.is_empty(), true);
     }
     #[test]
-    fn cambiar_nombre_playlist(){
+    fn test_cambiar_nombre_playlist(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         p.cambiar_nombre("Musica Jazz".to_string());
         assert_eq!(p.nombre, "Musica Jazz".to_string());
     }
     #[test]
-    fn limpiar_playlist(){
+    fn test_limpiar_playlist(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);

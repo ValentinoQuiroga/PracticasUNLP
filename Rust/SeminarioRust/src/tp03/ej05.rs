@@ -27,20 +27,20 @@ impl Producto{
 mod tests{
     use super::*;
         #[test]
-        fn impuestos(){
+        fn test_impuestos(){
             let prod = Producto::new("Hojas".to_string(), 100.00, 1);
             assert_eq!(prod.calcular_impuestos(25), 25.00);
         }
 
         #[test]
-        fn descuento(){
+        fn test_descuento(){
             let prod = Producto::new("Hojas".to_string(), 100.00, 1);
             assert_eq!(prod.aplicar_descuento(30), 30.00);
         }
 
 
         #[test]
-        fn precioBrutoTotal(){
+        fn test_precio_bruto_total(){
             let prod = Producto::new("Hojas".to_string(), 100.00, 1);
             assert_eq!(prod.calcular_precio_total(Some(30), Some(25)), 105.00);
         }

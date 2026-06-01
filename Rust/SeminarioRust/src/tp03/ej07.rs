@@ -116,13 +116,13 @@ impl Color{
 mod tests{
     use super::*;
     #[test]
-    fn agregar_auto_en_concensionario_con_espacio(){
+    fn test_agregar_auto_en_concensionario_con_espacio(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         assert_eq!(con.agregar_auto(auto), true);
     }
     #[test]
-    fn agregar_auto_en_concensionario_Sin_Espacio(){
+    fn test_agregar_auto_en_concensionario_Sin_Espacio(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 1);
         let auto_a: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         let auto_b: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
@@ -130,7 +130,7 @@ mod tests{
         assert_eq!(con.agregar_auto(auto_b), false);
     }
     #[test]
-    fn eliminar_auto_en_concensionario_con_el_auto(){
+    fn test_eliminar_auto_en_concensionario_con_el_auto(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         let auto_a_buscar: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
@@ -141,7 +141,7 @@ mod tests{
         assert!(con.buscar_auto(&auto_a_buscar).is_none());
     }
     #[test]
-    fn eliminar_auto_en_concensionario_sin_el_auto(){
+    fn test_eliminar_auto_en_concensionario_sin_el_auto(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto_a: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         let auto_b: Auto = Auto::new("B".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
@@ -155,14 +155,14 @@ mod tests{
         assert_eq!(con.autos.len(), 3);
     }
     #[test]
-    fn eliminar_auto_en_concensionario_sin_autos(){
+    fn test_eliminar_auto_en_concensionario_sin_autos(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto_a_eliminar: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         con.eliminar_auto(&auto_a_eliminar);
         assert_eq!(con.autos.len(), 0);
     }
     #[test]
-    fn buscar_auto_en_concensionario_con_el_auto(){
+    fn test_buscar_auto_en_concensionario_con_el_auto(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto_a: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         let auto_b: Auto = Auto::new("B".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
@@ -176,7 +176,7 @@ mod tests{
         assert_eq!(con.autos.len(), 2);
     }
     #[test]
-    fn buscar_auto_en_concensionario_sin_el_auto(){
+    fn test_buscar_auto_en_concensionario_sin_el_auto(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto_a: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         let auto_b: Auto = Auto::new("B".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
@@ -190,7 +190,7 @@ mod tests{
         assert_eq!(con.autos.len(), 3);
     }
     #[test]
-    fn buscar_auto_en_concensionario_sin_autos(){
+    fn test_buscar_auto_en_concensionario_sin_autos(){
         let mut con: ConsecionarioAuto = ConsecionarioAuto::new("Teueer".to_string(), "USA".to_string(), 5);
         let auto_a_buscar: Auto = Auto::new("D".to_string(), "A".to_string(), 2002, 100000.00, Color::Negro);
         assert_eq!(con.autos.len(), 0);
@@ -198,14 +198,14 @@ mod tests{
         assert_eq!(con.autos.len(), 0);
     }
     #[test]
-    fn precio_auto_color_primario_y_auto_color_secundario(){
+    fn test_precio_auto_color_primario_y_auto_color_secundario(){
         let auto_primario: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Rojo);
         let auto_secundario: Auto = Auto::new("A".to_string(), "A".to_string(), 2002, 100000.00, Color::Verde);
         assert_eq!(auto_primario.calcular_precio(), 125000.00);
         assert_eq!(auto_secundario.calcular_precio(), 90000.00);
     }
     #[test]
-    fn precio_auto_1999_2000_y_2001(){
+    fn test_precio_auto_1999_2000_y_2001(){
         let auto99: Auto = Auto::new("A".to_string(), "A".to_string(), 1999, 100000.00, Color::Rojo);
         let auto00: Auto = Auto::new("A".to_string(), "A".to_string(), 2000, 100000.00, Color::Rojo);
         let auto01: Auto = Auto::new("A".to_string(), "A".to_string(), 2001, 100000.00, Color::Rojo);
@@ -214,7 +214,7 @@ mod tests{
         assert_eq!(auto01.calcular_precio(), 125000.00);
     }
     #[test]
-    fn precio_auto_bmw_y_no_bmw(){
+    fn test_precio_auto_bmw_y_no_bmw(){
         let auto_bmw: Auto = Auto::new("BMW".to_string(), "A".to_string(), 2000, 100000.00, Color::Rojo);
         let auto_no_bmw: Auto = Auto::new("A".to_string(), "A".to_string(), 2000, 100000.00, Color::Rojo);
         assert_eq!(auto_bmw.calcular_precio(), 140000.00);

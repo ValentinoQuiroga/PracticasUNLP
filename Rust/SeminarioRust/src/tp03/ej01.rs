@@ -36,7 +36,7 @@ impl Persona{
 mod tests{
     use super::*;
     #[test]
-    fn crearPersonaSinDireccion(){
+    fn test_crear_persona_sin_direccion(){
         let persona1 = Persona::new("Valentino".to_string(), 24, None);
         assert_eq!(persona1.nombre, "Valentino");
         assert_eq!(persona1.edad, 24);
@@ -44,12 +44,12 @@ mod tests{
     }
     #[should_panic]
     #[test]
-    fn panicDireccionVacia(){
+    fn test_panic_direccion_vacia(){
         let persona1 = Persona::new("Valentino".to_string(), 24, None);
         assert_eq!(persona1.direccion.unwrap(), ""); 
     }
     #[test]
-    fn crearPersonaConDireecion(){
+    fn test_crear_persona_con_direcion(){
         let persona1 = Persona::new("Valentino".to_string(), 24, Some("Calle 10".to_string()));
         assert_eq!(persona1.nombre, "Valentino");
         assert_eq!(persona1.edad, 24);
@@ -57,28 +57,28 @@ mod tests{
     }
 
     #[test]
-    fn crearString(){
+    fn test_to_string(){
         let persona1 = Persona::new("Valentino".to_string(), 24, None);
         let texto: &str = "Valentino 24";
         assert_eq!(persona1.to_string(), texto);
     }
 
     #[test]
-    fn pedirEdad(){
+    fn test_pedir_edad(){
         let persona1 = Persona::new("Valentino".to_string(), 24, None);
         assert_eq!(persona1.obtener_edad(), 24);
 
     }
 
     #[test]
-    fn cambiarDireccion(){
+    fn test_cambiar_direccion(){
         let mut persona1 = Persona::new("Valentino".to_string(), 24, None);
         let texto: &str = "Valentino 24";
         assert_eq!(persona1.to_string(), texto);
 
         persona1.actualizar_direccion("Direccion nueva".to_string());
-        let textoB: &str = "Valentino 24 Direccion nueva";
-        assert_eq!(persona1.to_string(), textoB)
+        let texto_b: &str = "Valentino 24 Direccion nueva";
+        assert_eq!(persona1.to_string(), texto_b)
 
     }
 }
