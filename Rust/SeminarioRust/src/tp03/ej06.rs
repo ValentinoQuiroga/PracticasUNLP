@@ -21,13 +21,13 @@ impl Estudiante{
         Estudiante{nombre, id, notas}
     }
     pub fn obtener_promedio(&self) -> f32{
-        let mut sumaTotal = 0.00;
+        let mut suma_total = 0.00;
         let cant = self.notas.len();
         if !self.notas.is_empty(){
             for i in 0..cant{
-                sumaTotal += self.notas[i].nota;
+                suma_total += self.notas[i].nota;
             }
-            return sumaTotal / cant as f32; 
+            return suma_total / cant as f32; 
         }else{ return 0.00}     
     }
     pub fn obtener_calificacion_mas_alta(&self) -> f32{
@@ -58,7 +58,7 @@ impl Estudiante{
 mod tests{
     use super::*;
         #[test]
-        fn promedio(){
+        fn test_promedio(){
             let ex1 = Examen::new("".to_string(), 10.00);
             let ex2 = Examen::new("".to_string(), 2.00);
             let ex3 = Examen::new("".to_string(), 3.00);
@@ -73,12 +73,12 @@ mod tests{
         }
 
         #[test]
-        fn notaMasAlta(){
+        fn test_nota_mas_alta(){
             let ex1 = Examen::new("".to_string(), 10.00);
             let ex2 = Examen::new("".to_string(), 2.00);
             let ex3 = Examen::new("".to_string(), 3.00);
             let mut est = Estudiante::new("Valen".to_string(), 7);
-            let mut est2 = Estudiante::new("Valen".to_string(), 7);
+            let est2 = Estudiante::new("Valen".to_string(), 7);
             est.notas.push(ex1);
             est.notas.push(ex2);
             est.notas.push(ex3);
@@ -88,12 +88,12 @@ mod tests{
         }
 
         #[test]
-        fn notaMasBaja(){
+        fn test_nota_mas_baja(){
             let ex1 = Examen::new("".to_string(), 10.00);
             let ex2 = Examen::new("".to_string(), 2.00);
             let ex3 = Examen::new("".to_string(), 3.00);
             let mut est = Estudiante::new("Valen".to_string(), 7);
-            let mut est2 = Estudiante::new("Valen".to_string(), 7);
+            let est2 = Estudiante::new("Valen".to_string(), 7);
             est.notas.push(ex1);
             est.notas.push(ex2);
             est.notas.push(ex3);

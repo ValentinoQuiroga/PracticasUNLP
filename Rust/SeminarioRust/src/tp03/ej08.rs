@@ -71,14 +71,14 @@ impl Playlist{
         let cant: usize = self.lista.len();
         let mut i: usize = 0;
         let mut encontrado: bool = false;
-        let mut cancionEliminada: Option<Cancion> = None;
+        let mut cancion_eliminada: Option<Cancion> = None;
 
         while (i < cant) && !(encontrado){
             if self.lista[i].ig(cancion){encontrado = true;
             }else{i += 1;}
         }
-        if encontrado{ cancionEliminada = self.lista.remove(i);}
-        return cancionEliminada
+        if encontrado{ cancion_eliminada = self.lista.remove(i);}
+        return cancion_eliminada
     }
     pub fn mover_cancion(&mut self, cancion: &Cancion, pos: usize){
         match self.eliminar_cancion(cancion) {

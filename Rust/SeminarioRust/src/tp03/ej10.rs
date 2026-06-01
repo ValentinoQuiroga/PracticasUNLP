@@ -60,12 +60,12 @@ impl Biblioteca{
             }else{false}
         }else{false}
     }
-    fn ver_prestamos_a_vencer(&self, fechaHoy: &Fecha, dias_restantes: u8) -> Vec<&Prestamo>{
+    fn ver_prestamos_a_vencer(&self, fecha_hoy: &Fecha, dias_restantes: u8) -> Vec<&Prestamo>{
         let mut lista: Vec<&Prestamo> = Vec::new();
-        if fechaHoy.es_fecha_valida(){
+        if fecha_hoy.es_fecha_valida(){
             let mut pos: usize = 0;
             let mut detener_busqueda: bool = false;
-            let mut fecha_limite: Fecha = fechaHoy.clone();
+            let mut fecha_limite: Fecha = fecha_hoy.clone();
             fecha_limite.sumar_dias(dias_restantes as u32);
 
             while pos < self.prestamos_efectuados.len() && !detener_busqueda{
@@ -74,7 +74,7 @@ impl Biblioteca{
                 if prestamo.devuelto{detener_busqueda = true;}
                 else{
                     let fecha_vencimiento: &Fecha = &self.prestamos_efectuados[pos].vencimiento;
-                    if fecha_vencimiento.es_mayor(fechaHoy) && fecha_limite.es_mayor(fecha_vencimiento){
+                    if fecha_vencimiento.es_mayor(fecha_hoy) && fecha_limite.es_mayor(fecha_vencimiento){
                         lista.push(&self.prestamos_efectuados[pos]);
                     }
                     pos += 1;
@@ -83,9 +83,9 @@ impl Biblioteca{
         }
         lista
     }
-    fn ver_prestamos_vencidos(&self, fechaHoy: &Fecha) -> Vec<&Prestamo>{
+    fn ver_prestamos_vencidos(&self, fecha_hoy: &Fecha) -> Vec<&Prestamo>{
         let mut lista: Vec<&Prestamo> = Vec::new();
-        if fechaHoy.es_fecha_valida(){
+        if fecha_hoy.es_fecha_valida(){
             let mut pos: usize = 0;
             let mut detener_busqueda: bool = false;
             while pos < self.prestamos_efectuados.len() && !detener_busqueda{
@@ -95,7 +95,7 @@ impl Biblioteca{
                 else{
                     let fecha_vencimiento: &Fecha = &self.prestamos_efectuados[pos].vencimiento;
                     let devuelto: bool = self.prestamos_efectuados[pos].devuelto;
-                    if fechaHoy.es_mayor(fecha_vencimiento){
+                    if fecha_hoy.es_mayor(fecha_vencimiento){
                         lista.push(&self.prestamos_efectuados[pos]);
                     }
                     pos += 1;
@@ -120,9 +120,9 @@ impl Biblioteca{
         }
         return None
     }
-    fn devolver_libro(&mut self, libro: &Libro, cliente: &Cliente, fechaHoy: Fecha){
+    fn devolver_libro(&mut self, libro: &Libro, cliente: &Cliente, fecha_hoy: Fecha){
 
-        if self.libros_disponibles.contains_key(&libro.isbn) && fechaHoy.es_fecha_valida(){
+        if self.libros_disponibles.contains_key(&libro.isbn) && fecha_hoy.es_fecha_valida(){
             let mut pos: usize = 0;
             let mut encontrado: bool = false;
             let mut detener_busqueda: bool = false;
@@ -134,7 +134,7 @@ impl Biblioteca{
                 else if prestamo.libro.ig(libro) && prestamo.cliente.ig(cliente){
                     let mut prestamo = self.prestamos_efectuados.remove(pos).unwrap();
                     prestamo.devuelto = true;
-                    prestamo.devolucion = Some(fechaHoy.clone());
+                    prestamo.devolucion = Some(fecha_hoy.clone());
                     encontrado = true;
                     self.prestamos_efectuados.push_back(prestamo);
                 }else{ pos += 1;}
@@ -217,7 +217,7 @@ mod tests{
 
     #[test]
     fn test_obtener_cantidad_de_copias_libro_no_registrado(){
-        let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
+        let bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
         let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
 
         assert_eq!(bib.obtener_cantidad_de_copias(&libro), 0);
@@ -441,7 +441,6 @@ mod tests{
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
         let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
-        let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
         let fecha_hoy: Fecha = Fecha::new(01, 06, 2026);
 
         bib.agregar_libro(libro.clone());
@@ -503,93 +502,174 @@ mod tests{
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
         let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
         let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
-        let cliente_no_registrado: Cliente = Cliente::new("A".to_string(), "A".to_string(), "B".to_string());
         let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
 
         bib.agregar_libro(libro.clone());
         bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        bib.devolver_libro(&libro, &cliente, fecha_hoy.clone());
 
-        assert_eq!(bib.contar_prestamos_de_cliente(&cliente_no_registrado), 0);
+        assert_eq!(bib.contar_prestamos_de_cliente(&cliente), 0);
     }
 
     #[test]
-    fn test_aabb(){
+    fn test_contar_prestamos_cliente_con_prestamos_pendientes(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let l1: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let cli: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
-        let ven: Fecha = Fecha::new(16, 04, 2027);
-        let hoy: Fecha = Fecha::new(16, 04, 2028);
-        bib.agregar_libro(l1.clone());
-        bib.incrementar_cantidad_de_copias(&l1);
-        bib.incrementar_cantidad_de_copias(&l1);
-        bib.realizar_prestamo(l1.clone(), cli.clone(), ven.clone());
-        bib.realizar_prestamo(l1.clone(), cli.clone(), ven.clone());
-        bib.realizar_prestamo(l1.clone(), cli.clone(), ven.clone());
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(20, 06, 2026);
 
-        bib.devolver_libro(&l1, &cli, hoy.clone());
-        bib.devolver_libro(&l1, &cli, hoy.clone());
+        bib.agregar_libro(libro.clone());
+        bib.incrementar_cantidad_de_copias(&libro);
 
-        assert_eq!(bib.prestamos_efectuados[0].devuelto, false);
-        assert_eq!(bib.prestamos_efectuados[1].devuelto, true);
-        assert_eq!(bib.prestamos_efectuados[2].devuelto, true);
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+
+        assert_eq!(bib.contar_prestamos_de_cliente(&cliente), 2);
     }
+
+
     #[test]
-    fn test_obtener_cantidad_de_copias(){
+    fn test_ver_prestamos_a_vencer(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let l1: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        bib.agregar_libro(l1.clone());
-        assert_eq!(bib.obtener_cantidad_de_copias(&l1), 1);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        bib.agregar_libro(libro.clone());
+        bib.incrementar_cantidad_de_copias(&libro);
+        bib.incrementar_cantidad_de_copias(&libro);
+
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+
+        let a_vencer = bib.ver_prestamos_a_vencer(&fecha_hoy, 10);
+        assert_eq!(a_vencer.len(), 3);
     }
+
     #[test]
-    fn test_decrementar_cantidad_de_copias(){
+    fn test_ver_prestamos_a_vencer_prestamos_con_vencimiento_fuera_de_rango(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let l1: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        bib.agregar_libro(l1.clone());
-        bib.decrementar_cantidad_de_copias(&l1);
-        assert_eq!(bib.obtener_cantidad_de_copias(&l1), 0);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        bib.agregar_libro(libro.clone());
+
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+
+        let a_vencer = bib.ver_prestamos_a_vencer(&fecha_hoy, 1);
+        assert_eq!(a_vencer.len(), 0);
     }
+
     #[test]
-    fn test_incrementar_cantidad_de_copias(){
+    fn test_ver_prestamos_a_vencer_prestamos_vencidos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let l1: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        bib.agregar_libro(l1.clone());
-        bib.incrementar_cantidad_de_copias(&l1);
-        assert_eq!(bib.obtener_cantidad_de_copias(&l1), 2);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(19, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        bib.agregar_libro(libro.clone());
+
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+
+        let a_vencer = bib.ver_prestamos_a_vencer(&fecha_hoy, 3);
+        assert_eq!(a_vencer.len(), 0);
     }
+
     #[test]
-    fn test_contar_cantidad_de_prestamos_de_cliente(){
+    fn test_ver_prestamos_a_vencer_prestamos_devueltos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let l1: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let l2: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let l3: Libro = Libro::new(102, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        let l4: Libro = Libro::new(103, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
-        bib.agregar_libro(l1.clone());
-        bib.agregar_libro(l2.clone());
-        bib.agregar_libro(l3.clone());
-        bib.agregar_libro(l4.clone());
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
 
-        let cli: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
-        let cliB: Cliente = Cliente::new("A".to_string(), "A".to_string(), "B".to_string());
-        let ven: Fecha = Fecha::new(16, 04, 2027);
-        let vencido: Fecha = Fecha::new(10, 04, 2026);
-        let act: Fecha = Fecha::new(10, 04, 2027);
-        bib.realizar_prestamo(l1.clone(), cli.clone(), ven.clone());
-        bib.realizar_prestamo(l2.clone(), cli.clone(), ven.clone());
-        bib.realizar_prestamo(l3.clone(), cli.clone(), ven.clone());
-        bib.realizar_prestamo(l4.clone(), cliB.clone(), vencido.clone());
+        bib.agregar_libro(libro.clone());
 
-        assert_eq!(bib.contar_prestamos_de_cliente(&cli),3);
-        assert_eq!(bib.contar_prestamos_de_cliente(&cliB),1);
-        assert_eq!(bib.obtener_cantidad_de_copias(&l1),0);
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
 
-        bib.devolver_libro(&l1, &cli, act.clone());
-        
-        assert_eq!(bib.obtener_cantidad_de_copias(&l1),1);
-        assert_eq!(bib.contar_prestamos_de_cliente(&cli),2);
+        bib.devolver_libro(&libro, &cliente, fecha_hoy.clone());
 
-        let a_vencer = bib.ver_prestamos_a_vencer(&act, 7);
-        assert_eq!(a_vencer.len(), 2);
-        let vencidos = bib.ver_prestamos_vencidos(&act);
-        assert_eq!(vencidos.len(), 1);
+        let a_vencer = bib.ver_prestamos_a_vencer(&fecha_hoy, 10);
+        assert_eq!(a_vencer.len(), 0);
     }
+
+    #[test]
+    fn test_ver_prestamos_a_vencer_sin_prestamos(){
+        let bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        let a_vencer = bib.ver_prestamos_a_vencer(&fecha_hoy, 10);
+        assert_eq!(a_vencer.len(), 0);
+    }
+
+
+    #[test]
+    fn test_ver_prestamos_a_vencidos(){
+        let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(10, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        bib.agregar_libro(libro.clone());
+        bib.incrementar_cantidad_de_copias(&libro);
+        bib.incrementar_cantidad_de_copias(&libro);
+
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+
+        let vencidos = bib.ver_prestamos_vencidos(&fecha_hoy);
+        assert_eq!(vencidos.len(), 3);
+    }
+
+    #[test]
+    fn test_ver_prestamos_a_vencer_prestamos_vencidos_devueltos(){
+        let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(10, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        bib.agregar_libro(libro.clone());
+
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+
+        bib.devolver_libro(&libro, &cliente, fecha_hoy.clone());
+
+        let vencidos = bib.ver_prestamos_vencidos(&fecha_hoy);
+        assert_eq!(vencidos.len(), 0);
+    }
+
+    #[test]
+    fn test_ver_prestamos_vencidos_sin_prestamos_vencidos(){
+        let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(28, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        bib.agregar_libro(libro.clone());
+
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+
+        let vencidos = bib.ver_prestamos_vencidos(&fecha_hoy);
+        assert_eq!(vencidos.len(), 0);
+    }
+
+    #[test]
+    fn test_ver_prestamos_vencidos_sin_prestamos(){
+        let bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        let vencidos = bib.ver_prestamos_vencidos(&fecha_hoy);
+        assert_eq!(vencidos.len(), 0);
+    }
+
 }
