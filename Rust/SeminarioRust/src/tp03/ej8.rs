@@ -90,7 +90,7 @@ impl Playlist{
             true => Some(&self.lista[i]),
             false => None
         }
-
+        
     }
     pub fn obtener_canciones_de_un_genero(&self, genero: &Genero) -> VecDeque<Cancion>{
         let mut lista: VecDeque<Cancion> = VecDeque::new();

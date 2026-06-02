@@ -28,33 +28,33 @@ impl Rectangulo{
 mod tests{
     use super::*;
     #[test]
-    fn crearRectangulo(){
+    fn test_crear_rectangulo(){
         let rec: Rectangulo = Rectangulo::new(5, 3);
         assert_eq!(rec.ancho, 3);
         assert_eq!(rec.longitud, 5);
     }
     #[test]
-    fn obtenerAreaRectangulo(){
+    fn test_obtener_area_rectangulo(){
         let rec: Rectangulo = Rectangulo::new(5, 3);
         assert_eq!(rec.calcular_area(), 15);
     }
     #[test]
-    fn obtenerPerimetroRectangulo(){
+    fn test_obtener_perimetro_rectangulo(){
         let rec: Rectangulo = Rectangulo::new(5, 3);
         assert_eq!(rec.calcular_perimetro(), 16);
     }
     #[test]
-    fn rectanguloCuadrado(){
+    fn test_rectangulo_cuadrado(){
         let rec: Rectangulo = Rectangulo::new(5, 5);
         assert_eq!(rec.es_cuadrado(), true);
     }
     #[test]
-    fn noEsRectanguloCuadrado(){
+    fn test_no_es_rectangulo_cuadrado(){
         let rec: Rectangulo = Rectangulo::new(5, 3);
         assert_eq!(rec.es_cuadrado(), false);
     }
     #[test]
-    fn rectanguloCuadradoMax(){
+    fn test_rectangulo_cuadrado_max(){
         let max = u32::MAX;
         let rec: Rectangulo = Rectangulo::new(max, max);
         assert_eq!(rec.es_cuadrado(), true);
@@ -65,14 +65,14 @@ mod tests{
 
     #[should_panic]
     #[test]
-    fn rectanguloMaximoOverflowArea(){
+    fn test_rectangulo_maximo_overflow_area(){
         let max = u32::MAX;
         let rec: Rectangulo = Rectangulo::new(max, max);
         assert_eq!(rec.calcular_area(), max);
     }
     #[should_panic]
     #[test]
-    fn rectanguloMaximoOverflowPerimetro(){
+    fn test_rectangulo_maximo_overflow_perimetro(){
         let max = u32::MAX;
         let rec: Rectangulo = Rectangulo::new(max, max);
         assert_eq!(rec.calcular_perimetro(), max);

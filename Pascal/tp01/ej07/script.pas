@@ -62,7 +62,9 @@ begin
     leerTexto(texto, dato);
     while(dato.cod <> valor_alto) do
     begin
+        writeln(dato.cod);
         write(binario, dato);
+        leerTexto(texto, dato);
     end;
 end;
 
@@ -85,7 +87,7 @@ var
     nomBinario: String;
     dato: novela;
 begin
-    writeln('Ingrese nombre del binario a crear: ');
+    writeln('Ingrese nombre del binario a abrir: ');
     readln(nomBinario);
 
     assign(binario, nomBinario);
@@ -115,8 +117,9 @@ begin
 
 	leerBinario(binario, dato);
 	while (dato.cod <> valor_alto) and (dato.cod <> codigoIngresado) do
-	begin
+    begin
 		leerBinario(binario,dato);
+        writeln(dato.cod);
 	end;
 
 	if (dato.cod = codigoIngresado) then
