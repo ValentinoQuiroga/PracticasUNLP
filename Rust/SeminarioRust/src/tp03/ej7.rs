@@ -55,7 +55,6 @@ impl ConsecionarioAuto{
                 Color::Amarillo => registro_recaudacion.autos_amarillos += precio,
                 Color::Blanco => registro_recaudacion.autos_blancos += precio,
                 Color::Negro => registro_recaudacion.autos_negros += precio,
-                _ => panic!("Auto de color no registrado"),
             }
         }
         registro_recaudacion
@@ -177,6 +176,7 @@ mod tests{
         assert_eq!(registro.autos_blancos, 0.00);
         assert_eq!(registro.autos_amarillos, 0.00);
         assert_eq!(registro.autos_azules, 0.00);
+
     }
 
 
