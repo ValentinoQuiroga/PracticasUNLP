@@ -8,7 +8,7 @@ init() {
 }
 
 push() {
-        lista=($1 "${lista[@]}")
+        lista=($@ "${lista[@]}")
 }
 
 # Muestra el último elemento y lo elimina del array (Función Pop/Last)
