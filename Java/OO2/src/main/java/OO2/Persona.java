@@ -1,4 +1,4 @@
-package AYED.OO2;
+package OO2;
 
 /**
  * De esta forma crearemos las clases del ejercicio

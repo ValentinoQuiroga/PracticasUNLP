@@ -29,6 +29,7 @@
 	</section>
 	<section name="Maven2ProjectWizardArchifactPage">
 		<list key="package">
+			<item value="OO2"/>
 			<item value="AYED.OO2"/>
 			<item value="AYED.ejercicio1"/>
 		</list>

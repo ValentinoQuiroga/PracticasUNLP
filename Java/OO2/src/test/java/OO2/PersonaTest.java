@@ -1,4 +1,4 @@
-package AYED.OO2;
+package OO2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
