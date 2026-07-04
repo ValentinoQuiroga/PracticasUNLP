@@ -154,12 +154,10 @@ begin
         write(lbr, libro_nuevo);
     end
     else begin
-        pos_sig:= dato.cdgo;
-        while(pos_sig < 0) do begin
+        while(dato.cdgo < 0) do begin
             pos:= filePos(lbr) - 1;
-            seek(lbr, pos_sig * -1);
+            seek(lbr, dato.cdgo * -1);
             leer_l(lbr, dato);
-            pos_sig:= dato.cdgo;
         end;
         seek(lbr, filePos(lbr) - 1);
         write(lbr, libro_nuevo);

@@ -1,5 +1,5 @@
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Fecha{
     dd: u32,
     mm: u32,
