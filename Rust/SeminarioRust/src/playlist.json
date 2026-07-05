@@ -1,0 +1,17 @@
+[
+  {
+    "titulo": "A",
+    "artista": "A",
+    "genero": "RAP"
+  },
+  {
+    "titulo": "B",
+    "artista": "B",
+    "genero": "OTROS"
+  },
+  {
+    "titulo": "C",
+    "artista": "B",
+    "genero": "RAP"
+  }
+]

@@ -375,4 +375,52 @@ mod tests{
         let diagnostico_modificad = vet.registros[0].diagnostico.clone();
         assert_eq!(diagnostico_modificad, "Diagnostico B");
     }
+
+    #[test]
+    fn test_buscar_atencion(){
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
+        
+        let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
+        let animal_a: Animal = Animal::GATO;
+        let mascota_a: Mascota = Mascota::new("A".to_string(), 5, animal_a, dueño_a.clone());
+        let registro = Registro::new(mascota_a.clone(), "Diagnostico A".to_string(), "A".to_string(), None);
+
+        assert_eq!(registro.proxima_visita.is_none(), true);
+
+        vet.agregar_nueva_mascota(mascota_a.clone());
+        vet.registrar_atencion(registro.clone());
+        vet.registrar_atencion(registro.clone());
+        vet.registrar_atencion(registro.clone());
+        let atenciones = vet.buscar_atencion(&"A".to_string(),
+             &"A".to_string(), &"0000".to_string());
+        assert_eq!(atenciones.len(), 3);
+        assert_eq!(atenciones.front().unwrap().ig(&registro), true);
+    }
+
+    #[test]
+    fn test_eliminar_atencion(){
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
+        
+        let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
+        let animal_a: Animal = Animal::GATO;
+        let mascota_a: Mascota = Mascota::new("A".to_string(), 5, animal_a.clone(), dueño_a.clone());
+        let mascota_b: Mascota = Mascota::new("B".to_string(), 5, animal_a.clone(), dueño_a.clone());
+        let registro = Registro::new(mascota_a.clone(), "Diagnostico A".to_string(), "A".to_string(), None);
+        let registro_b: Registro = Registro::new(mascota_b.clone(), "Diagnostico A".to_string(), "A".to_string(), None);
+
+        assert_eq!(registro.proxima_visita.is_none(), true);
+
+        vet.agregar_nueva_mascota(mascota_a.clone());
+        vet.registrar_atencion(registro.clone());
+        vet.registrar_atencion(registro.clone());
+        vet.registrar_atencion(registro_b.clone());
+        vet.eliminar_atencion(&registro_b);
+        assert_eq!(vet.registros.len(), 2);
+        
+        let atenciones = vet.buscar_atencion(&"B".to_string(),
+             &"A".to_string(), &"0000".to_string());
+        
+        assert_eq!(atenciones.is_empty(), true);
+
+    }
 }

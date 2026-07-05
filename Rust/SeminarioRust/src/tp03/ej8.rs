@@ -1,8 +1,13 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, fs::File, io::Write};
+
+use serde::{Deserialize, Serialize, de::value::Error};
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Cancion{titulo: String, artista: String, genero: Genero}
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Genero{ROCK, POP, RAP, JAZZ, OTROS}
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Playlist{ lista: VecDeque<Cancion>, nombre: String}
 
 impl Genero{
@@ -47,12 +52,41 @@ impl Cancion{
     }
 }
 impl Playlist{
+    pub fn crear_archivo(&self) -> Result<bool, Error>{
+        let path = "src/playlist.json";
+        match File::create(path) {
+            Ok(mut archivo) => {
+                match archivo.write_all(b"[]"){
+                    Ok(_) => Ok(true),
+                    Err(e) => panic!("")
+                }
+            },
+            Err(e) => {
+                panic!("No se pudo crear el archivo porque: {}", e);
+            }
+        }
+    }
     pub fn new(nombre: String) -> Playlist{
         let lista: VecDeque<Cancion> = VecDeque::new();
         Playlist { lista, nombre }
     }
+    fn escribir_json(&self) -> Result<bool, Error>{
+        let path = "src/playlist.json";
+        let archivo = File::create(path);
+
+        let playlist_serializada = serde_json::to_string_pretty(&self.lista);
+
+        match playlist_serializada{
+            Err(e) => (panic!("No se pudo escribir por: {}", e)),
+            Ok(playlist) => {
+                archivo.unwrap().write_all(&playlist.as_bytes());
+                return Ok(true)
+            }
+        }
+    }
     pub fn agregar_cancion(&mut self, cancion: Cancion){
         self.lista.push_back(cancion);
+        self.escribir_json();
     }
     pub fn eliminar_cancion(&mut self, cancion: &Cancion) -> Option<Cancion>{
         let cant: usize = self.lista.len();
@@ -65,6 +99,7 @@ impl Playlist{
             }else{i += 1;}
         }
         if encontrado{ cancion_eliminada = self.lista.remove(i);}
+        self.escribir_json();
         return cancion_eliminada
     }
     pub fn mover_cancion(&mut self, cancion: &Cancion, pos: usize){
@@ -125,6 +160,7 @@ mod tests{
     #[test]
     fn test_eliminar_cancion(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_a_eliminar: Cancion = can.clonar();
         p.agregar_cancion(can);
@@ -135,6 +171,7 @@ mod tests{
     #[test]
     fn test_eliminar_cancion_no_agregada(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_a_eliminar: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         p.agregar_cancion(can);
@@ -145,6 +182,7 @@ mod tests{
     #[test]
     fn test_mover_cancion(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         let can_c: Cancion = Cancion::new("BC".to_string(), "B".to_string(), Genero::ROCK);
@@ -158,6 +196,7 @@ mod tests{
     #[test]
     fn test_mover_cancion_posicion_mayor_a_cantidad(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         let can_c: Cancion = Cancion::new("BC".to_string(), "B".to_string(), Genero::ROCK);
@@ -171,6 +210,7 @@ mod tests{
     #[test]
     fn test_mover_cancion_no_agregada(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         let can_c: Cancion = Cancion::new("C".to_string(), "B".to_string(), Genero::ROCK);
@@ -187,6 +227,7 @@ mod tests{
     #[test]
     fn test_buscar_cancion(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         p.agregar_cancion(can.clonar());
         assert_eq!(p.buscar_cancion_por_nombre("A".to_string()).unwrap().ig(&can), true);
@@ -194,6 +235,7 @@ mod tests{
     #[test]
     fn test_buscar_cancion_no_agregada(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         p.agregar_cancion(can);
         assert_eq!(p.buscar_cancion_por_nombre("B".to_string()).is_none(), true);
@@ -201,13 +243,14 @@ mod tests{
     #[test]
     fn test_obtener_canciones_por_genero(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
-        let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
-        let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
-        let can_c: Cancion = Cancion::new("C".to_string(), "B".to_string(), Genero::JAZZ);
+        p.crear_archivo();
+        let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::RAP);
+        let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::OTROS);
+        let can_c: Cancion = Cancion::new("C".to_string(), "B".to_string(), Genero::RAP);
         p.agregar_cancion(can_a.clonar());
         p.agregar_cancion(can_b.clonar());
         p.agregar_cancion(can_c.clonar());
-        let nueva_lista: VecDeque<Cancion> = p.obtener_canciones_de_un_genero(&Genero::JAZZ);
+        let nueva_lista: VecDeque<Cancion> = p.obtener_canciones_de_un_genero(&Genero::RAP);
         assert_eq!(nueva_lista.len(), 2);
         assert_eq!(nueva_lista[0].ig(&can_a), true);
         assert_eq!(nueva_lista[1].ig(&can_c), true);
@@ -215,6 +258,7 @@ mod tests{
     #[test]
     fn test_obtener_canciones_por_genero_no_agregado(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         let can_c: Cancion = Cancion::new("C".to_string(), "B".to_string(), Genero::JAZZ);
@@ -228,6 +272,7 @@ mod tests{
     #[test]
     fn test_obtener_canciones_por_artista(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         let can_c: Cancion = Cancion::new("C".to_string(), "A".to_string(), Genero::JAZZ);
@@ -242,6 +287,7 @@ mod tests{
     #[test]
     fn test_obtener_canciones_por_artista_no_agregado(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         let can_c: Cancion = Cancion::new("C".to_string(), "A".to_string(), Genero::JAZZ);
@@ -255,12 +301,14 @@ mod tests{
     #[test]
     fn test_cambiar_nombre_playlist(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         p.cambiar_nombre("Musica Jazz".to_string());
         assert_eq!(p.nombre, "Musica Jazz".to_string());
     }
     #[test]
     fn test_limpiar_playlist(){
         let mut p: Playlist = Playlist::new("Musica".to_string());
+        p.crear_archivo();
         let can_a: Cancion = Cancion::new("A".to_string(), "A".to_string(), Genero::JAZZ);
         let can_b: Cancion = Cancion::new("B".to_string(), "B".to_string(), Genero::POP);
         let can_c: Cancion = Cancion::new("C".to_string(), "A".to_string(), Genero::JAZZ);
@@ -271,4 +319,5 @@ mod tests{
         p.limpiar_playlist();
         assert_eq!(p.lista.is_empty(), true);
     }
+
 }
