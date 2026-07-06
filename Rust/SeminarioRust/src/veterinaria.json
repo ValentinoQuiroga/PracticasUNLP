@@ -1,0 +1,17 @@
+[
+  {
+    "mascota": {
+      "nombre": "A",
+      "edad": 5,
+      "tipo": "GATO",
+      "dueño": {
+        "nombre": "A",
+        "direccion": "A",
+        "telefono": "0000"
+      }
+    },
+    "diagnostico": "Diagnostico A",
+    "tratamiento": "A",
+    "proxima_visita": null
+  }
+]

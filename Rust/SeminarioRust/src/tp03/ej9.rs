@@ -1,33 +1,39 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, io::{BufReader, Error}, path};
 use crate::tp03::ej3::Fecha;
+use std::fs::File;
+use std::io::prelude::*;
+use std::path::Path;
+use serde::{Serialize, Deserialize};
+
 struct Veterinaria{
     nombre: String,
     direccion: String,
     id: u32,
     cola: VecDeque<Mascota>,
-    registros: VecDeque<Registro>
+    registros: VecDeque<Registro>,
+    path: String
 }
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 struct Mascota{
     nombre: String,
     edad: u8,
     tipo: Animal,
     dueño: Dueño
 }
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 struct Dueño{
     nombre: String,
     direccion: String,
     telefono: String
 }
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 struct Registro{
     mascota: Mascota,
     diagnostico: String,
     tratamiento: String,
     proxima_visita: Option<Fecha>
 }
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 enum Animal{
     PERRO,
     GATO,
@@ -85,10 +91,23 @@ impl Mascota{
     }
 }
 impl Veterinaria{
-    fn new(nombre: String, direccion: String, id: u32) -> Veterinaria{
+    pub fn actualizar_informe(&self, registros: VecDeque<Registro>) -> Result<File, Error>{
+        let registros_serializados = serde_json::to_string_pretty(&registros)?;
+        let result = File::create(&self.path);
+        match result{
+            Err(e) => Err(e),
+            Ok(mut archivo) => {
+                archivo.write_all(&registros_serializados.as_bytes())?;
+                Ok(archivo)}
+        }
+    }
+    fn new(nombre: String, direccion: String, id: u32, path: String) -> Veterinaria{
         let cola: VecDeque<Mascota> = VecDeque::new();
         let registros: VecDeque<Registro> = VecDeque::new();
-        Veterinaria { nombre, direccion, id, cola, registros}
+        if let Ok(mut archivo) = File::create(&path){
+            let _ = archivo.write_all("[]".as_bytes());
+        }
+        Veterinaria { nombre, direccion, id, cola, registros, path}
     }
     fn agregar_nueva_mascota(&mut self, mascota: Mascota){
         self.cola.push_back(mascota);
@@ -113,60 +132,94 @@ impl Veterinaria{
             self.cola.remove(pos);
         }
     }
-    fn registrar_atencion(&mut self, atencion: Registro){
-        self.registros.push_front(atencion);
-    }
-    fn buscar_atencion(&self, nombre_mascota: &String, nombre_dueño: &String, telefono: &String) -> VecDeque<&Registro>{
-        let mut atenciones: VecDeque<&Registro> = VecDeque::new();
+    fn obtener_registros(&self) -> Result<VecDeque<Registro>, Error>{;
+        let archivo = match File::open(&self.path){
+            Ok(f) => f,
+            Err(_) => return Ok(VecDeque::new()),
+        };
 
-       for i in 0..self.registros.len(){
-            let registro_aux = &self.registros[i].mascota;
+        let lector = BufReader::new(archivo);
+        
+        let mut lista_deserializada: 
+            VecDeque<Registro> = serde_json::from_reader(lector).unwrap_or_default();
+        return Ok(lista_deserializada);
+
+    }
+    fn registrar_atencion(&self, atencion: Registro) -> Result<(), Error>{
+        let mut registros = self.obtener_registros()?;
+        registros.push_front(atencion);
+        self.actualizar_informe(registros);
+        return Ok(());
+    }
+    fn buscar_atencion(&self, nombre_mascota: &String, nombre_dueño: &String, telefono: &String) -> Option<Registro>{
+        let mut atencion: Option<Registro> = None;
+        let result_registros = self.obtener_registros();
+        let registros: VecDeque<Registro>;
+        match result_registros{
+            Err(_) => return None,
+            Ok(r) => registros = r
+        }
+        let mut i = 0;
+        let mut encontrado = false;
+
+       while( i < registros.len()) && (!encontrado){
+            let registro_aux = &registros[i].mascota;
             if (registro_aux.nombre == *nombre_mascota) && (registro_aux.dueño.nombre == *nombre_dueño) && (registro_aux.dueño.telefono == *telefono){
-                    atenciones.push_back(&self.registros[i]);
+                    atencion = Some(registros[i].clone());
+                    encontrado = true;
+            }else{
+                i += 1;
             }
         }
-        return atenciones
+        return atencion;
     }
     fn modificar_diagnostico(&mut self, atencion: &Registro, modificacion: String){
         let mut pos: usize = 0;
         let mut encontrado: bool = false;
+        let mut registros = self.obtener_registros().unwrap();
 
-        while (pos < self.registros.len()) && !(encontrado){
-            if self.registros[pos].ig(atencion){
+        while (pos < registros.len()) && !(encontrado){
+            if registros[pos].ig(atencion){
                 encontrado = true;
             }else{ pos += 1}
         }
 
         if encontrado{
-            self.registros[pos].diagnostico = modificacion;
+            registros[pos].diagnostico = modificacion;
+            self.actualizar_informe(registros);
         }
+
     }
     fn modificar_proxima_visita(&mut self, atencion: &Registro, nueva_fecha: Fecha){
         let mut pos: usize = 0;
         let mut encontrado: bool = false;
+        let mut registros = self.obtener_registros().unwrap();
 
-        while (pos < self.registros.len()) && !(encontrado){
-            if self.registros[pos].ig(atencion){
+        while (pos < registros.len()) && !(encontrado){
+            if registros[pos].ig(atencion){
                 encontrado = true;
             }else{ pos += 1}
         }
 
         if encontrado{
-            self.registros[pos].proxima_visita = Some(nueva_fecha);
+            registros[pos].proxima_visita = Some(nueva_fecha);
+            self.actualizar_informe(registros);
         }
     }
     fn eliminar_atencion(&mut self, atencion: &Registro){
         let mut pos: usize = 0;
         let mut encontrado: bool = false;
+        let mut registros = self.obtener_registros().unwrap();
 
-        while (pos < self.registros.len()) && !(encontrado){
-            if self.registros[pos].ig(atencion){
+        while (pos < registros.len()) && !(encontrado){
+            if registros[pos].ig(atencion){
                 encontrado = true;
             }else{ pos += 1}
         }
 
         if encontrado{
-            self.registros.remove(pos);
+            registros.remove(pos);
+            self.actualizar_informe(registros);
         }
     }
 
@@ -244,7 +297,8 @@ mod tests{
 
     #[test]
     fn test_cola_normal(){
-        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(),
+         "10".to_string(), 3, "src/tp03/tests/ej9/test_cola_normal.json".to_string());
         
         let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
         let animal_a: Animal = Animal::GATO;
@@ -277,7 +331,8 @@ mod tests{
     }
     #[test]
     fn test_urgencia(){
-        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(),
+         "10".to_string(), 3,"src/tp03/tests/ej9/test_urgencia.json".to_string());
         
         let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
         let animal_a: Animal = Animal::GATO;
@@ -307,8 +362,8 @@ mod tests{
     }
     #[test]
     fn test_eliminar_mascota_de_cola(){
-        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
-        
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(),
+         "10".to_string(), 3,"src/tp03/tests/ej9/test_eliminar_mascota_de_cola.json".to_string());        
         let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
         let animal_a: Animal = Animal::GATO;
         let mascota_a: Mascota = Mascota::new("A".to_string(), 5, animal_a, dueño_a);
@@ -339,8 +394,8 @@ mod tests{
     
     #[test]
     fn test_modificar_proxima_visita(){
-        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
-        
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(),
+         "10".to_string(), 3,"src/tp03/tests/ej9/test_modificar_proxima_visita.json".to_string());        
         let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
         let animal_a: Animal = Animal::GATO;
         let mascota_a: Mascota = Mascota::new("A".to_string(), 5, animal_a, dueño_a.clone());
@@ -353,14 +408,17 @@ mod tests{
         vet.registrar_atencion(registro.clone());
         vet.modificar_proxima_visita(&registro, nueva_fecha.clone());
 
-        let fecha_modificada = vet.registros[0].proxima_visita.clone().unwrap();
-        assert_eq!(nueva_fecha.ig(&fecha_modificada), true);
+        let fecha_modificada = vet
+            .buscar_atencion(&"A".to_string(), 
+            &"A".to_string(), &"0000".to_string()).unwrap()
+            .proxima_visita;
+        assert_eq!(nueva_fecha.ig(&fecha_modificada.unwrap()), true);
     }
 
     #[test]
     fn test_modificar_diagnostico(){
-        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
-        
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(),
+         "10".to_string(), 3,"src/tp03/tests/ej9/test_modificar_diagnostico.json".to_string());
         let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
         let animal_a: Animal = Animal::GATO;
         let mascota_a: Mascota = Mascota::new("A".to_string(), 5, animal_a, dueño_a.clone());
@@ -372,35 +430,34 @@ mod tests{
         vet.registrar_atencion(registro.clone());
         vet.modificar_diagnostico(&registro, "Diagnostico B".to_string());
 
-        let diagnostico_modificad = vet.registros[0].diagnostico.clone();
-        assert_eq!(diagnostico_modificad, "Diagnostico B");
+        let mut diagnostico_modificado = registro.clone();
+        diagnostico_modificado.diagnostico = "Diagnostico B".to_string();
+
+        assert_eq!(vet.buscar_atencion(&"A".to_string(), &"A".to_string(), &"0000".to_string()).unwrap().ig(&diagnostico_modificado), true);
     }
 
     #[test]
     fn test_buscar_atencion(){
-        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
-        
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(),
+         "10".to_string(), 3,"src/tp03/tests/ej9/test_buscar_atencion.json".to_string());
         let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
         let animal_a: Animal = Animal::GATO;
         let mascota_a: Mascota = Mascota::new("A".to_string(), 5, animal_a, dueño_a.clone());
         let registro = Registro::new(mascota_a.clone(), "Diagnostico A".to_string(), "A".to_string(), None);
 
-        assert_eq!(registro.proxima_visita.is_none(), true);
-
         vet.agregar_nueva_mascota(mascota_a.clone());
         vet.registrar_atencion(registro.clone());
         vet.registrar_atencion(registro.clone());
-        vet.registrar_atencion(registro.clone());
-        let atenciones = vet.buscar_atencion(&"A".to_string(),
+        vet.registrar_atencion(registro.clone());  
+        let atencion = vet.buscar_atencion(&"A".to_string(),
              &"A".to_string(), &"0000".to_string());
-        assert_eq!(atenciones.len(), 3);
-        assert_eq!(atenciones.front().unwrap().ig(&registro), true);
+        assert_eq!(atencion.unwrap().ig(&registro), true); 
     }
 
     #[test]
     fn test_eliminar_atencion(){
-        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(), "10".to_string(), 3);
-        
+        let mut vet: Veterinaria = Veterinaria::new("Vet".to_string(),
+         "10".to_string(), 3,"src/tp03/tests/ej9/test_eliminar_atencion.json".to_string());
         let dueño_a = Dueño::new("A".to_string(), "A".to_string(), "0000".to_string());
         let animal_a: Animal = Animal::GATO;
         let mascota_a: Mascota = Mascota::new("A".to_string(), 5, animal_a.clone(), dueño_a.clone());
@@ -408,19 +465,17 @@ mod tests{
         let registro = Registro::new(mascota_a.clone(), "Diagnostico A".to_string(), "A".to_string(), None);
         let registro_b: Registro = Registro::new(mascota_b.clone(), "Diagnostico A".to_string(), "A".to_string(), None);
 
-        assert_eq!(registro.proxima_visita.is_none(), true);
-
         vet.agregar_nueva_mascota(mascota_a.clone());
         vet.registrar_atencion(registro.clone());
         vet.registrar_atencion(registro.clone());
         vet.registrar_atencion(registro_b.clone());
         vet.eliminar_atencion(&registro_b);
-        assert_eq!(vet.registros.len(), 2);
         
-        let atenciones = vet.buscar_atencion(&"B".to_string(),
+        
+        let atencion = vet.buscar_atencion(&"B".to_string(),
              &"A".to_string(), &"0000".to_string());
         
-        assert_eq!(atenciones.is_empty(), true);
+        assert_eq!(atencion.is_none(), true);
 
     }
 }

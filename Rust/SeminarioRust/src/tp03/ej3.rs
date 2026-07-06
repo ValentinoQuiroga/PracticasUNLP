@@ -1,5 +1,6 @@
-
-#[derive(Clone, Debug, PartialEq)]
+use serde::Deserialize;
+use serde::Serialize;
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Fecha{
     dd: u32,
     mm: u32,

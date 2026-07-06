@@ -2,12 +2,16 @@ use core::panic;
 use std::collections::{HashMap, VecDeque};
 use crate::tp03::ej3::Fecha;
 struct Biblioteca{nombre: String, direccion: String, libros_disponibles: HashMap<u64, (u16, Libro)>, prestamos_efectuados: VecDeque<Prestamo>}
-#[derive(Clone)]
+
+#[derive(PartialEq, Clone, Debug)]
 struct Libro{isbn: u64, titulo: String, autor: String, paginas: u16, genero: Genero}
+#[derive(PartialEq, Clone, Debug)]
 struct Prestamo{libro: Libro, cliente: Cliente, vencimiento: Fecha, devolucion: Option<Fecha>, devuelto: bool}
-#[derive(Clone)]
+
+#[derive(PartialEq, Clone, Debug)]
 struct Cliente{nombre: String, telefono: String, correo_e: String}
-#[derive(Clone)]
+
+#[derive(PartialEq, Clone, Debug)]
 enum Genero{Novela, Infantil, Tecnico, Otros}
 
 impl Biblioteca{
@@ -289,7 +293,7 @@ mod tests{
     #[test]
     fn test_realizar_prestamo_libro_con_cinco_copias_cliente_con_cuatro_prestamos(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Infantil);
         bib.agregar_libro(libro.clone());
         bib.incrementar_cantidad_de_copias(&libro);
         bib.incrementar_cantidad_de_copias(&libro);
@@ -313,7 +317,7 @@ mod tests{
     fn test_realizar_prestamo_libro_no_registrado(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
         let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
-        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let libro_no_registrado: Libro = Libro::new(101, "Titulo".to_string(), "A".to_string(), 100, Genero::Tecnico);
         bib.agregar_libro(libro.clone());
 
 
@@ -328,7 +332,7 @@ mod tests{
     #[test]
     fn test_realizar_prestamo_libro_con_cero_copias(){
         let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
-        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Otros);
         bib.agregar_libro(libro.clone());
         bib.decrementar_cantidad_de_copias(&libro);
 
@@ -670,6 +674,21 @@ mod tests{
 
         let vencidos = bib.ver_prestamos_vencidos(&fecha_hoy);
         assert_eq!(vencidos.len(), 0);
+    }
+
+    #[test]
+    fn test_buscar_prestamo(){
+        let mut bib: Biblioteca = Biblioteca::new("Biblio".to_string(), "10".to_string());
+        let libro: Libro = Libro::new(100, "Titulo".to_string(), "A".to_string(), 100, Genero::Novela);
+        let cliente: Cliente = Cliente::new("A".to_string(), "A".to_string(), "A".to_string());
+        let fecha_vencimiento: Fecha = Fecha::new(10, 06, 2026);
+        let fecha_hoy: Fecha = Fecha::new(20, 06, 2026);
+
+        bib.agregar_libro(libro.clone());
+        bib.realizar_prestamo(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        let prestamo = Prestamo::new(libro.clone(), cliente.clone(), fecha_vencimiento.clone());
+        assert_eq!(bib.buscar_prestamo(&libro, &cliente).unwrap().eq(&prestamo), true);
+        
     }
 
 }
