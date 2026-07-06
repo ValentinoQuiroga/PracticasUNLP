@@ -1,0 +1,14 @@
+/home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/deps/serde-5e55f54fb28dcb99.d: /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/build/serde-5b333b2a0e48940e/out/private.rs
+
+/home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/deps/libserde-5e55f54fb28dcb99.rlib: /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/build/serde-5b333b2a0e48940e/out/private.rs
+
+/home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/deps/libserde-5e55f54fb28dcb99.rmeta: /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/build/serde-5b333b2a0e48940e/out/private.rs
+
+/home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/valentino/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/build/serde-5b333b2a0e48940e/out/private.rs:
+
+# env-dep:OUT_DIR=/home/valentino/PracticasUNLP/Rust/SeminarioRust/src/coverage/debug/build/serde-5b333b2a0e48940e/out
