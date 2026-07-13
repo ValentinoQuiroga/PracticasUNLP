@@ -37,15 +37,16 @@
 	<section name="ZipFileImportWizard">
 		<item key="WizardZipFileResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID" value="false"/>
 		<list key="WizardZipFileResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="/home/valentino/Descargas/2025_TP5_Ej1.zip"/>
 			<item value="/home/valentino/Descargas/ag(1).zip"/>
 			<item value="/home/valentino/Descargas/tp2.zip"/>
 		</list>
 		<section name="ZipFileImportWizard.dialogBounds">
-			<item key="DIALOG_X_ORIGIN" value="380"/>
-			<item key="DIALOG_Y_ORIGIN" value="33"/>
-			<item key="DIALOG_WIDTH" value="715"/>
-			<item key="DIALOG_HEIGHT" value="567"/>
-			<item key="DIALOG_FONT_NAME" value="1|System-ui|10.0|0|GTK|1|"/>
+			<item key="DIALOG_X_ORIGIN" value="0"/>
+			<item key="DIALOG_Y_ORIGIN" value="0"/>
+			<item key="DIALOG_WIDTH" value="613"/>
+			<item key="DIALOG_HEIGHT" value="550"/>
+			<item key="DIALOG_FONT_NAME" value="1|Adwaita Sans|11.0|0|GTK|1|"/>
 		</section>
 	</section>
 </section>

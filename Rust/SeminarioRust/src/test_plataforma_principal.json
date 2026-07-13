@@ -1,0 +1,141 @@
+{
+  "nombre": "XYZ",
+  "usuarios": {
+    "44006927": {
+      "nombre": "Valentino",
+      "apellido": "Quiroga",
+      "email": "valen@mail.com",
+      "dni": 44006927,
+      "identidad_validada": true,
+      "balance": {
+        "Bitcoin": 5000.0,
+        "Ethereum": 1000.0,
+        "Peso Argentino": 80000.0
+      }
+    }
+  },
+  "registro": {
+    "44006927": [
+      {
+        "fecha": {
+          "dd": 16,
+          "mm": 4,
+          "aaaa": 2026
+        },
+        "tipo": "(ingreso de dinero)",
+        "monto": 150000.0,
+        "usuario": {
+          "nombre": "Valentino",
+          "apellido": "Quiroga",
+          "email": "valen@mail.com",
+          "dni": 44006927,
+          "identidad_validada": true,
+          "balance": {
+            "Peso Argentino": 150000.0
+          }
+        },
+        "criptomoneda": null,
+        "cotizacion": null,
+        "blockchain": null,
+        "hash": null,
+        "medio_retiro": null
+      },
+      {
+        "fecha": {
+          "dd": 17,
+          "mm": 4,
+          "aaaa": 2026
+        },
+        "tipo": "compra de cripto",
+        "monto": 6000.0,
+        "usuario": {
+          "nombre": "Valentino",
+          "apellido": "Quiroga",
+          "email": "valen@mail.com",
+          "dni": 44006927,
+          "identidad_validada": true,
+          "balance": {
+            "Bitcoin": 6000.0,
+            "Peso Argentino": 90000.0
+          }
+        },
+        "criptomoneda": "Bitcoin",
+        "cotizacion": 0.1,
+        "blockchain": null,
+        "hash": null,
+        "medio_retiro": null
+      },
+      {
+        "fecha": {
+          "dd": 18,
+          "mm": 4,
+          "aaaa": 2026
+        },
+        "tipo": "compra de cripto",
+        "monto": 1000.0,
+        "usuario": {
+          "nombre": "Valentino",
+          "apellido": "Quiroga",
+          "email": "valen@mail.com",
+          "dni": 44006927,
+          "identidad_validada": true,
+          "balance": {
+            "Bitcoin": 6000.0,
+            "Ethereum": 1000.0,
+            "Peso Argentino": 70000.0
+          }
+        },
+        "criptomoneda": "Ethereum",
+        "cotizacion": 0.05,
+        "blockchain": null,
+        "hash": null,
+        "medio_retiro": null
+      },
+      {
+        "fecha": {
+          "dd": 19,
+          "mm": 4,
+          "aaaa": 2026
+        },
+        "tipo": "venta de cripto",
+        "monto": 1000.0,
+        "usuario": {
+          "nombre": "Valentino",
+          "apellido": "Quiroga",
+          "email": "valen@mail.com",
+          "dni": 44006927,
+          "identidad_validada": true,
+          "balance": {
+            "Bitcoin": 5000.0,
+            "Ethereum": 1000.0,
+            "Peso Argentino": 80000.0
+          }
+        },
+        "criptomoneda": "Bitcoin",
+        "cotizacion": 10.0,
+        "blockchain": null,
+        "hash": null,
+        "medio_retiro": null
+      }
+    ]
+  },
+  "tabla_cotizacion": {
+    "Bitcoin": [
+      [
+        "Peso Argentino",
+        10.0
+      ]
+    ],
+    "Peso Argentino": [
+      [
+        "Bitcoin",
+        0.1
+      ],
+      [
+        "Ethereum",
+        0.05
+      ]
+    ]
+  },
+  "path_archivo": "src/test_plataforma_principal.json"
+}

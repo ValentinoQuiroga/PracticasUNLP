@@ -110,20 +110,6 @@ impl Fecha{
 
     }
 
-    pub fn obetener_estacion(&self) -> Estacion{
-        match (self.mm, self.dd){
-            (12, 21..31) => (Estacion::Verano),
-            (1|2, _) => (Estacion::Verano),
-            (3, 1..20) => (Estacion::Verano),
-            (3, 21..31) => (Estacion::Otoño),
-            (4|5, _) => (Estacion::Otoño),
-            (6, 1..20) => (Estacion::Otoño),
-            (6, 21..31) => (Estacion::Primavera),
-            (7|8, _) => (Estacion::Primavera),
-            (10|11, _) => (Estacion::Primavera),
-            (12, 1..20) => (Estacion::Primavera)
-        }
-    }
 }
 
 struct PlataformaStreaming{
@@ -174,23 +160,6 @@ struct EstacionTop{
     cantidad_mes: u8
 }
 impl PlataformaStreaming{
-    pub fn estacion_con_mas_suscripciones(&self) -> Option<EstacionTop>{
-        let mut lista = self.usuarios.iter().clone().map(|x| x.1.suscripcion);
-        let mut estaciones = [0; 4];
-        let mut dato_meses: HashMap<&Estacion, [i32; 4]> = HashMap::new();
-        for susc in lista{
-            if susc.is_some(){
-                match susc.unwrap().fecha_inicio.obetener_estacion(){
-                    (Estacion::Verano) => {
-                        estaciones[0] += 1},
-                    (Estacion::Otoño) => (estaciones[1] += 1),
-                    (Estacion::Invierno) => (estaciones[2] += 1),
-                    (Estacion::Primavera) => (estaciones[3] += 1)
-                }
-            }
-        }
-        return None
-    }
     pub fn metodo_mas_utilizado_activa(&self) -> Option<MetodoDePago>{
         let mut iter_s: Vec<Usuario> = 
             self.usuarios.clone().into_values().filter(|u| u.suscripcion.is_some()).collect();

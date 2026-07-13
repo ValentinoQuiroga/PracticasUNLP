@@ -10,4 +10,6 @@
     <fullyQualifiedTypeName name="java.util.Queue"/>
     <fullyQualifiedTypeName name="java.lang.System"/>
     <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.sun.tools.jdeps.Graph"/>
+    <fullyQualifiedTypeName name="ayedParcial.ParcialGrafos"/>
 </qualifiedTypeNameHistroy>
